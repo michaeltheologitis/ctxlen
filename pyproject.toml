@@ -1,0 +1,28 @@
+[project]
+name = "ctxlen"
+version = "0.0.0"
+description = "max_input and max_output for any litellm model id, with no dependencies and no network"
+requires-python = ">=3.9"
+dependencies = []
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.md"
+keywords = ["llm", "litellm", "context window", "tokens", "models.dev"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Repository = "https://github.com/michaeltheologitis/ctxlen"
+
+[build-system]
+requires = ["uv_build>=0.11.32,<0.12"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
