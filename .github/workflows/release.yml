@@ -47,6 +47,7 @@ jobs:
       wheel_sha256: ${{ steps.package.outputs.wheel_sha256 }}
       sdist_sha256: ${{ steps.package.outputs.sdist_sha256 }}
       digest: ${{ steps.package.outputs.digest }}
+      litellm_release: ${{ steps.data.outputs.litellm_release }}
       reason: ${{ steps.fetch.outputs.reason || steps.data.outputs.reason || steps.package.outputs.reason }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -90,6 +91,48 @@ jobs:
         with:
           name: record
           path: record
+          if-no-files-found: ignore
+
+  conformance:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 30
+    outputs:
+      differences: ${{ steps.e1.outputs.differences }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: inputs
+          path: inputs
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+      - name: Install litellm release R and the built wheel
+        env:
+          RELEASE: ${{ needs.build.outputs.litellm_release }}
+          WHEEL: ${{ needs.build.outputs.wheel }}
+        run: |
+          uv venv .conformance --python 3.13
+          uv pip install --python .conformance/bin/python \
+            --exclude-newer "$(date -u -d '3 days ago' +%Y-%m-%dT%H:%M:%SZ)" "litellm==$RELEASE" "dist/$WHEEL"
+      - name: E1
+        id: e1
+        run: >-
+          env -i PATH="$PATH" HOME="$HOME" GITHUB_OUTPUT="$GITHUB_OUTPUT"
+          .conformance/bin/python -m pipeline.conformance --inputs inputs --report conformance.json
+          ${{ (github.event_name == 'push' || github.event_name == 'pull_request') && '--strict' || '' }}
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: conformance
+          path: conformance.json
           if-no-files-found: ignore
 
   publish:
@@ -150,7 +193,7 @@ jobs:
           git push origin "v$VERSION"
 
   watchdog:
-    needs: [build, publish, record]
+    needs: [build, conformance, publish, record]
     if: >-
       always() && needs.build.result != 'skipped' &&
       (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
@@ -166,6 +209,7 @@ jobs:
       FAULT: ${{ inputs.fault || 'none' }}
       CHANNEL: ${{ needs.build.outputs.channel }}
       DIGEST: ${{ needs.build.outputs.digest }}
+      DIFFERENCES: ${{ needs.conformance.outputs.differences }}
       RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -176,4 +220,4 @@ jobs:
         run: >-
           uv run --python 3.13 --no-dev python -m pipeline.build watchdog
           --ref "$GITHUB_REF" --fault "$FAULT" --channel "$CHANNEL" --digest "$DIGEST"
-          --results "$NEEDS" --run-url "$RUN_URL"
+          --results "$NEEDS" --differences "$DIFFERENCES" --run-url "$RUN_URL"

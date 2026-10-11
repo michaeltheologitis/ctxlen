@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .venv/
+.conformance/
 .pytest_cache/
 .ruff_cache/
 /dist/
