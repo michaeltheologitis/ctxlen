@@ -63,3 +63,18 @@ FIXTURE = {
 @pytest.fixture
 def index():
     return build_index(FIXTURE)
+
+
+def litellm_row(provider="openai", max_input=None, max_output=None, **fields):
+    """A row of litellm's model_prices_and_context_window.json."""
+    limits = {"max_input_tokens": max_input, "max_output_tokens": max_output}
+    limits = {name: value for name, value in limits.items() if value is not None}
+    return {"litellm_provider": provider, **limits, **fields}
+
+
+def models_dev_model(context, output, input=None, modalities=("text",)):
+    """A model of models.dev's api.json."""
+    limit = {"context": context, "output": output}
+    if input is not None:
+        limit["input"] = input
+    return {"limit": limit, "modalities": {"input": ["text"], "output": [*modalities]}}
