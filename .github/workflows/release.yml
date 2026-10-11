@@ -1,0 +1,179 @@
+name: release
+
+on:
+  schedule:
+    - cron: "41 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      fault:
+        description: A fault to inject, for the live tier; rejected on main
+        type: choice
+        options: [none, force, shrink, refuse, alarm]
+        default: none
+      replay_run:
+        description: The id of an earlier run whose inputs artifact this run rebuilds from
+        type: string
+        default: ""
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    # Guard 1 of the three that keep final versions on main (2 is release_plan, 3 is publish's check):
+    # a scheduled run off main does nothing, so neither does any job after it.
+    if: github.event_name != 'schedule' || github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    env:
+      EVENT: ${{ github.event_name }}
+      FAULT: ${{ inputs.fault || 'none' }}
+    outputs:
+      channel: ${{ steps.package.outputs.channel }}
+      version: ${{ steps.package.outputs.version }}
+      publish: ${{ steps.package.outputs.publish }}
+      record: ${{ steps.package.outputs.record }}
+      record_version: ${{ steps.package.outputs.record_version }}
+      wheel: ${{ steps.package.outputs.wheel }}
+      sdist: ${{ steps.package.outputs.sdist }}
+      wheel_sha256: ${{ steps.package.outputs.wheel_sha256 }}
+      sdist_sha256: ${{ steps.package.outputs.sdist_sha256 }}
+      digest: ${{ steps.package.outputs.digest }}
+      reason: ${{ steps.fetch.outputs.reason || steps.data.outputs.reason || steps.package.outputs.reason }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - name: Download the replayed inputs
+        if: inputs.replay_run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: inputs
+          path: inputs
+          run-id: ${{ inputs.replay_run }}
+          github-token: ${{ github.token }}
+      - name: Fetch
+        id: fetch
+        run: >-
+          uv run --python 3.13 --no-dev python -m pipeline.build fetch
+          --ref "$GITHUB_REF" --inputs inputs --pypi pypi ${{ inputs.replay_run && '--pypi-only' || '' }}
+      - name: Data
+        id: data
+        run: uv run --python 3.13 --no-dev python -m pipeline.build data --inputs inputs --pypi pypi --fault "$FAULT"
+      - name: Package
+        id: package
+        run: >-
+          uv run --python 3.13 --no-dev python -m pipeline.build package
+          --event "$EVENT" --ref "$GITHUB_REF" --fault "$FAULT"
+          --inputs inputs --pypi pypi --dist dist --record record
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: inputs
+          path: inputs
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: dist
+          path: dist
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: record
+          path: record
+          if-no-files-found: ignore
+
+  publish:
+    needs: build
+    if: needs.build.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.fault == 'refuse' && 'pypi-refused' || 'pypi' }}
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+      - name: Check the artifacts against the build, and the version against the ref
+        env:
+          VERSION: ${{ needs.build.outputs.version }}
+          WHEEL: ${{ needs.build.outputs.wheel }}
+          SDIST: ${{ needs.build.outputs.sdist }}
+          WHEEL_SHA256: ${{ needs.build.outputs.wheel_sha256 }}
+          SDIST_SHA256: ${{ needs.build.outputs.sdist_sha256 }}
+        run: |
+          test "$(ls dist | wc -l)" = 2
+          echo "$WHEEL_SHA256  dist/$WHEEL" | sha256sum --check
+          echo "$SDIST_SHA256  dist/$SDIST" | sha256sum --check
+          case "$WHEEL" in "ctxlen-$VERSION-py3-none-any.whl") ;; *) exit 1 ;; esac
+          # Guard 3: only main publishes a version without .dev, whatever pipeline/ planned.
+          case "$VERSION" in *.dev*) ;; *) test "$GITHUB_REF" = refs/heads/main || exit 1 ;; esac
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+
+  record:
+    needs: [build, publish]
+    if: >-
+      always() && needs.build.result == 'success' && needs.build.outputs.record == 'true' &&
+      (needs.publish.result == 'success' || needs.publish.result == 'skipped')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.ref == 'refs/heads/main' && 'main' || github.sha }}
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: record
+          path: record
+      - name: Commit the data and tag the version
+        env:
+          VERSION: ${{ needs.build.outputs.record_version }}
+        run: |
+          cp -r record/. .
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/ctxlen/_data.json reports
+          git diff --cached --quiet || git commit -m "Release $VERSION"
+          git tag "v$VERSION"
+          if [ "$GITHUB_REF" = refs/heads/main ]; then git push origin HEAD:main; fi
+          git push origin "v$VERSION"
+
+  watchdog:
+    needs: [build, publish, record]
+    if: >-
+      always() && needs.build.result != 'skipped' &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      HEALTHCHECK_PING_URL: ${{ secrets.HEALTHCHECK_PING_URL }}
+      NEEDS: ${{ toJSON(needs) }}
+      FAULT: ${{ inputs.fault || 'none' }}
+      CHANNEL: ${{ needs.build.outputs.channel }}
+      DIGEST: ${{ needs.build.outputs.digest }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+      - name: Watchdog
+        run: >-
+          uv run --python 3.13 --no-dev python -m pipeline.build watchdog
+          --ref "$GITHUB_REF" --fault "$FAULT" --channel "$CHANNEL" --digest "$DIGEST"
+          --results "$NEEDS" --run-url "$RUN_URL"

@@ -1,0 +1,44 @@
+{
+ "built_at": "2026-10-11T22:17:33Z",
+ "litellm": {
+  "commit": "c0ca4a51f76013e22c19a1c5a90e5f316d978ee5",
+  "json_sha256": "42bd693443127deee28dd7ea3edbebe1f34737a82fda11ceb70f72bbbb66c308",
+  "release": "1.104.2"
+ },
+ "models_dev": {
+  "api_sha256": "9b1ff57995dbe2323d69d2f8ad5f72fdb0de27760d122a7ec933c2a0fa3cd001",
+  "fetched_at": "2026-10-11T20:10:44Z",
+  "dev_head": "e6932ba604bb3644f62993c19ad5d93a47490aac"
+ },
+ "rows": {
+  "litellm": 4040,
+  "with_input": 3238,
+  "with_output": 2898,
+  "with_context": 759,
+  "fills": 1547,
+  "providers": 170
+ },
+ "field_fills": {
+  "input": 3,
+  "output": 47
+ },
+ "dropped_padding": 315,
+ "skipped_models_dev": 0,
+ "disagreements": 285,
+ "coverage": {
+  "catalog": 2752,
+  "litellm_alone": 906,
+  "ctxlen": 2449,
+  "total_from_models_dev": 2313,
+  "total_from_litellm": 136,
+  "total_none": 303
+ },
+ "gate": {
+  "previous": {
+   "rows": 4040,
+   "fills": 1653,
+   "providers": 170
+  },
+  "shrink_limit": 0.25
+ }
+}
