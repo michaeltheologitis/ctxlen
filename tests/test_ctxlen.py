@@ -5,6 +5,7 @@ import pytest
 
 import ctxlen
 from ctxlen import _resolve
+from pipeline.data import ANCHORS
 
 FUNCTIONS = [ctxlen.ctxlen, ctxlen.max_input, ctxlen.max_output]
 
@@ -23,6 +24,12 @@ def test_import_reads_no_data():
         [sys.executable, "-c", probe], capture_output=True, text=True, check=True
     ).stdout
     assert out.strip() == "0"
+
+
+@pytest.mark.parametrize("anchor", ANCHORS)
+def test_anchors_have_positive_limits(anchor):
+    assert ctxlen.max_input(anchor) > 0
+    assert ctxlen.ctxlen(anchor) >= ctxlen.max_input(anchor)
 
 
 @pytest.mark.parametrize("function", FUNCTIONS)
