@@ -26,3 +26,5 @@ dev = ["pytest>=8"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+markers = ["live: real PyPI and GitHub; run with -m live"]
+addopts = "-m 'not live'"
