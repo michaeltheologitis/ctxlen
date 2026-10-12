@@ -1,7 +1,7 @@
 [project]
 name = "ctxlen"
 version = "0.0.0"
-description = "max_input and max_output for any litellm model id, with no dependencies and no network"
+description = "The context limits of any LLM: zero dependencies, no network, three functions"
 requires-python = ">=3.9"
 dependencies = []
 license = "MIT"
