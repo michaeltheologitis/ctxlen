@@ -127,16 +127,26 @@ MATCH_ANY_PROVIDERS = frozenset({"litellm_proxy", "github", "nadir"})
 DATED_SUFFIX = re.compile(r"-\d{4}-\d{2}-\d{2}$")
 
 
-def limits(model: str, caller: str) -> tuple[int | None, int | None, int | None]:
+def limits(
+    model: str, caller: str, live: bool = False
+) -> tuple[int | None, int | None, int | None]:
     """(max_input, max_output, total) of the row litellm's get_model_info reaches for `model`.
 
     The total is the row's models.dev context; without one, its max_input, raised to its
     max_output where that is larger, so the total is never below either limit.
     Raises TypeError unless `model` is a str; `caller` names the public function in the message.
+    With live, the row comes from _latest.index(), the latest release's data; otherwise from
+    the bundled copy.
     """
     if not isinstance(model, str):
         raise TypeError(f"ctxlen.{caller}() takes a model id as a str, got {model!r}")
-    hit = find_row(model, shipped_index())
+    if live:
+        from ctxlen import _latest  # here, not at the top: _latest imports this module
+
+        index = _latest.index()
+    else:
+        index = shipped_index()
+    hit = find_row(model, index)
     if hit is None:
         return None, None, None
     _, max_input, max_output, context = hit[1]

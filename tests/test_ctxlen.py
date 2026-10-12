@@ -1,3 +1,4 @@
+import inspect
 import subprocess
 import sys
 
@@ -8,6 +9,11 @@ from ctxlen import _resolve
 from pipeline.data import ANCHORS
 
 FUNCTIONS = [ctxlen.ctxlen, ctxlen.max_input, ctxlen.max_output]
+LIVE_PARAGRAPH = """
+With live=True, the default, the numbers are the latest release's, fetched
+from GitHub at most once an hour and cached in ~/.cache/ctxlen/. Offline,
+with live=False, or with CTXLEN_OFFLINE=1 set, they are the ones installed
+with this version."""
 
 
 def test_public_surface_is_three_functions():
@@ -24,6 +30,21 @@ def test_import_reads_no_data():
         [sys.executable, "-c", probe], capture_output=True, text=True, check=True
     ).stdout
     assert out.strip() == "0"
+
+
+@pytest.mark.parametrize("function", FUNCTIONS)
+def test_live_is_keyword_only(function):
+    with pytest.raises(TypeError, match="takes 1 positional argument but 2 were given"):
+        function("gpt-4o", False)
+
+
+@pytest.mark.parametrize("function", FUNCTIONS)
+def test_help_shows_the_live_keyword(function):
+    assert (
+        str(inspect.signature(function))
+        == "(model: str, *, live: bool = True) -> Optional[int]"
+    )
+    assert inspect.getdoc(function).endswith(LIVE_PARAGRAPH)
 
 
 @pytest.mark.parametrize("anchor", ANCHORS)

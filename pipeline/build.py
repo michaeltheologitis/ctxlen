@@ -74,13 +74,16 @@ SDIST_FILES = frozenset(
         "LICENSE",
         "src/ctxlen/__init__.py",
         "src/ctxlen/_resolve.py",
+        "src/ctxlen/_latest.py",
         "src/ctxlen/_data.json",
         "src/ctxlen/py.typed",
     }
 )
 # uv 0.13 keeps the original pyproject.toml beside the normalized copy it writes into the sdist.
 SDIST_OPTIONAL = frozenset({"pyproject.toml.orig"})
+REQUIRES_DIST = ("Requires-Dist: httpx>=0.28,<1", "Requires-Dist: certifi")
 FIRST_LOOKUP_LIMIT_MS = 100
+DEFAULT_LOOKUP_LIMIT_MS = 2000  # ctxlen._latest.DEADLINE, the most a live lookup waits
 PROBE_PYTHONS = ("3.13", "3.9")
 PYPI_WAIT_SECONDS = 600
 PYPI_POLL_SECONDS = 30
@@ -381,8 +384,10 @@ def package(args: argparse.Namespace) -> None:
 
 
 def check_e4(wheel: Path, sdist: Path) -> dict:
-    """E4: the wheel requires nothing, the sdist holds exactly SDIST_FILES, and the installed
-    wheel answers with the network refused, its first lookup within FIRST_LOOKUP_LIMIT_MS."""
+    """E4: the wheel requires exactly REQUIRES_DIST, the sdist holds exactly SDIST_FILES, and
+    the installed wheel, with the network refused, imports without httpx, answers with
+    live=False, its first lookup within FIRST_LOOKUP_LIMIT_MS on 3.13, and gives the same
+    answer by default within DEFAULT_LOOKUP_LIMIT_MS."""
     with zipfile.ZipFile(wheel) as archive:
         metadata = next(
             archive.read(n).decode()
@@ -405,15 +410,21 @@ def check_e4(wheel: Path, sdist: Path) -> dict:
         "probes": {python: probe(wheel, python) for python in PROBE_PYTHONS},
     }
     summary(f"E4: ```{json.dumps(e4)}```")
-    if e4["requires_dist"]:
-        raise BuildError(f"E4: the wheel requires {e4['requires_dist']}")
+    if sorted(e4["requires_dist"]) != sorted(REQUIRES_DIST):
+        raise BuildError(
+            f"E4: the wheel requires {e4['requires_dist']}, not {list(REQUIRES_DIST)}"
+        )
     if e4["sdist_extra"] or e4["sdist_missing"]:
         raise BuildError(
             f"E4: the sdist has extra {e4['sdist_extra']} and lacks {e4['sdist_missing']}"
         )
     for python, result in e4["probes"].items():
-        if not result["network_refused"] or not (
-            isinstance(result["gpt_4o"], int) and result["gpt_4o"] > 0
+        if (
+            not result["network_refused"]
+            or not (isinstance(result["gpt_4o"], int) and result["gpt_4o"] > 0)
+            or result["httpx_loaded"]
+            or result["default_gpt_4o"] != result["gpt_4o"]
+            or result["default_lookup_ms"] > DEFAULT_LOOKUP_LIMIT_MS
         ):
             raise BuildError(f"E4: the {python} probe got {result}")
     first_lookup = e4["probes"][PROBE_PYTHONS[0]]["first_lookup_ms"]
@@ -424,38 +435,48 @@ def check_e4(wheel: Path, sdist: Path) -> dict:
     return e4
 
 
-# Put on PYTHONPATH, this refuses every connection the probe's interpreter tries.
+# Put on PYTHONPATH, this refuses every connection a new interpreter tries, and counts them in
+# sitecustomize.ATTEMPTS.
 SITECUSTOMIZE = """import socket
+
+ATTEMPTS = []
 
 
 def _refuse(*args, **kwargs):
-    raise OSError("the E4 probe allows no network")
+    ATTEMPTS.append(args)
+    raise OSError("this interpreter allows no network")
 
 
 socket.socket.connect = _refuse
 socket.create_connection = _refuse
 socket.getaddrinfo = _refuse
 """
-PROBE = """import json, socket, time
+PROBE = """import json, socket, sys, time
 start = time.perf_counter()
 import ctxlen
 imported = time.perf_counter()
-first = ctxlen.max_input("gpt-4o")
+first = ctxlen.max_input("gpt-4o", live=False)
 looked_up = time.perf_counter()
 later = []
 for model in ["gpt-4o", "openai/gpt-4o", "anthropic/claude-sonnet-4-5", "vertex_ai/gemini-2.5-pro",
               "bedrock/us.anthropic.claude-sonnet-4-5-20250929-v1:0", "gemini/gemini-2.5-pro-001",
               "ft:gpt-4o-2024-08-06:acme::AbC123", "GPT-4o", "dashscope/qwen3.6-plus", "not-a-model"]:
     before = time.perf_counter()
-    ctxlen.max_output(model)
+    ctxlen.max_output(model, live=False)
     later.append(time.perf_counter() - before)
+httpx_loaded = "httpx" in sys.modules
+before = time.perf_counter()
+default = ctxlen.max_input("gpt-4o")
+defaulted = time.perf_counter()
 try:
     socket.create_connection(("pypi.org", 443), timeout=5)
     guarded = False
 except OSError:
     guarded = True
 print(json.dumps({"import_ms": (imported - start) * 1000, "first_lookup_ms": (looked_up - imported) * 1000,
-                  "slowest_later_ms": max(later) * 1000, "gpt_4o": first, "network_refused": guarded}))
+                  "slowest_later_ms": max(later) * 1000, "gpt_4o": first, "httpx_loaded": httpx_loaded,
+                  "default_lookup_ms": (defaulted - before) * 1000, "default_gpt_4o": default,
+                  "network_refused": guarded}))
 """
 
 
@@ -468,7 +489,11 @@ def probe(wheel: Path, python: str) -> dict:
         (guard / "sitecustomize.py").write_text(SITECUSTOMIZE)
         run(["uv", "venv", "--quiet", "--python", python, str(venv)])
         run(["uv", "pip", "install", "--quiet", "--python", interpreter, str(wheel)])
-        environment = {"PATH": os.environ["PATH"], "PYTHONPATH": str(guard)}
+        environment = {
+            "PATH": os.environ["PATH"],
+            "PYTHONPATH": str(guard),
+            "XDG_CACHE_HOME": str(Path(scratch) / "cache"),
+        }
         return json.loads(run([interpreter, "-c", PROBE], env=environment, cwd=scratch))
 
 
