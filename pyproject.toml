@@ -1,7 +1,7 @@
 [project]
 name = "ctxlen"
 version = "0.0.0"
-description = "The context limits of any LLM: zero dependencies, no network, three functions"
+description = "The context limits of any LLM: always fresh, works offline, three functions"
 requires-python = ">=3.9"
 dependencies = ["httpx>=0.28,<1", "certifi"]
 license = "MIT"
