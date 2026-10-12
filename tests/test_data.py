@@ -3,7 +3,7 @@ import json
 import pytest
 
 from ctxlen import _resolve
-from ctxlen._resolve import build_index, find_row
+from ctxlen._resolve import FORMAT, build_index, find_row
 from pipeline.data import (
     MODELS_DEV_PROVIDERS,
     NEVER_FILL,
@@ -377,13 +377,14 @@ def test_gate_without_a_previous_release_runs_the_absolute_checks():
         check_gate({**FIXTURE, "routing": [["(unclosed", "openai"]]}, None)
 
 
-def test_dump_data_is_one_row_per_line_and_round_trips():
+def test_dump_data_starts_with_the_format_and_is_one_row_per_line():
     text = dump_data(FIXTURE)
-    assert json.loads(text) == FIXTURE
+    assert json.loads(text) == {"format": FORMAT, **FIXTURE}
     lines = text.splitlines()
+    assert lines[0] == '{"format":1,'
     assert '"gpt-4o":["openai",128000,16384,128000],' in lines
     assert '"dashscope/qwen3.6-plus":["dashscope",1000000,65536,1000000],' in lines
-    assert len(lines) == len(FIXTURE["rows"]) + len(FIXTURE["fills"]) + 5
+    assert len(lines) == len(FIXTURE["rows"]) + len(FIXTURE["fills"]) + 6
 
 
 def test_coverage_counts_litellm_alone_and_with_fills():
