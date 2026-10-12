@@ -10,7 +10,7 @@ import re
 from collections.abc import Mapping, Sequence
 from typing import NamedTuple
 
-from ctxlen._resolve import build_index, find_row
+from ctxlen._resolve import FORMAT, build_index, find_row
 
 RESERVED_KEYS = frozenset({"sample_spec", "fallback_generalizations"})
 SHRINK_LIMIT = 0.25
@@ -347,7 +347,8 @@ def coverage(projected: dict, merged: dict, catalog: Sequence[str]) -> dict:
 
 
 def dump_data(data: dict) -> str:
-    """_data.json's layout: one row per line, so a release's diff reads like litellm's."""
+    """_data.json's layout: "format" first, then one row per line, so a release's diff reads
+    like litellm's."""
 
     def compact(value: object) -> str:
         return json.dumps(value, separators=(",", ":"))
@@ -355,11 +356,14 @@ def dump_data(data: dict) -> str:
     def table(rows: dict) -> str:
         return ",\n".join(f"{compact(key)}:{compact(row)}" for key, row in rows.items())
 
-    head = ",\n".join(
-        f"{compact(name)}:{compact(data[name])}"
-        for name in ("providers", "routing", "ai21_chat")
+    head = {
+        "format": FORMAT,
+        **{name: data[name] for name in ("providers", "routing", "ai21_chat")},
+    }
+    fields = ",\n".join(
+        f"{compact(name)}:{compact(value)}" for name, value in head.items()
     )
-    return f'{{{head},\n"rows":{{\n{table(data["rows"])}}},\n"fills":{{\n{table(data["fills"])}}}}}\n'
+    return f'{{{fields},\n"rows":{{\n{table(data["rows"])}}},\n"fills":{{\n{table(data["fills"])}}}}}\n'
 
 
 def disagreements_csv(rows: Sequence[Disagreement]) -> str:

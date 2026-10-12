@@ -14,6 +14,9 @@ from typing import NamedTuple
 # [litellm_provider: str | None, max_input: int | None, max_output: int | None,
 #  context: int | None], where context is models.dev's total window for the model
 Row = list
+# The version of _data.json's layout that build_index reads. Bump it only when an older
+# build_index would misread new data.
+FORMAT = 1
 
 
 class Index(NamedTuple):

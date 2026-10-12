@@ -4,6 +4,7 @@ import zipfile
 
 import pytest
 
+from ctxlen._resolve import FORMAT
 from pipeline.build import main, post_issue
 from tests.conftest import litellm_row, models_dev_model
 
@@ -78,6 +79,8 @@ def run_data(*extra):
 def test_data_command_writes_the_data_and_reports_from_inputs(workspace):
     assert run_data() == 0
     data = json.loads((workspace / "src/ctxlen/_data.json").read_text())
+    assert next(iter(data)) == "format"
+    assert data["format"] == FORMAT
     assert list(data["rows"]) == [
         key
         for key in COST_MAP
