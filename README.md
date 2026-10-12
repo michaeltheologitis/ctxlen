@@ -1,9 +1,9 @@
 # ctxlen 📏
 
-A super minimal, 0-dependencies, project to look up the context limits (input and output tokens) of LLMs. 🤔
+A super minimal, always-fresh, project to look up the context limits (input and output tokens) of LLMs. 🤔
 
-- 🪶 Zero dependencies and no network calls: drop it into any project.
-- 🔄 Checked for new models every 6 hours.
+- 🔄 New models checked every 6 hours, and your install picks them up within the hour: no upgrade needed.
+- 🪶 Just httpx and certifi as dependencies, and it still works offline, with the numbers it shipped with.
 - 🧰 Just three functions.
 
 ## Install
@@ -44,3 +44,7 @@ ctxlen.max_output("gpt-6-sol")  # 128_000
 ```
 
 The numbers come from litellm and models.dev; their notices are in [LICENSE](https://github.com/michaeltheologitis/ctxlen/blob/main/LICENSE).
+
+## Offline
+
+`ctxlen.ctxlen("gpt-6-sol", live=False)` uses only the numbers that came with your version, and `CTXLEN_OFFLINE=1` does that for the whole process. ctxlen asks GitHub for fresh numbers at most once an hour and keeps them in `~/.cache/ctxlen/`.
