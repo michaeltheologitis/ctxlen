@@ -12,6 +12,12 @@ How many tokens fit? 🤔 Look up the context limits (input and output tokens) o
 uv add ctxlen
 ```
 
+Or with pip:
+
+```shell
+pip install ctxlen
+```
+
 ## Usage
 
 Ask for a model's whole context window:
