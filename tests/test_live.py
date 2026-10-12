@@ -1,5 +1,5 @@
-"""The live tier, E5 and E6: release.yml dispatched on CTXLEN_LIVE_REF against real PyPI, GitHub and
-healthchecks.io. The tests run in file order, and only the first publishes: a pass publishes one dev
+"""The live tier, E5, E9 and E6: release.yml dispatched on CTXLEN_LIVE_REF against real PyPI, GitHub
+and healthchecks.io. The tests run in file order, and only the first publishes: a pass publishes one dev
 release. The later dispatches replay its inputs, so upstream moving mid-pass cannot publish another."""
 
 import json
@@ -11,7 +11,8 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from ctxlen._resolve import build_index, find_row
+from ctxlen import _latest
+from ctxlen._resolve import FORMAT, build_index, find_row
 from pipeline.build import PYPI_WAIT_SECONDS, current_ctxlen_json, gh, remote_tags
 from pipeline.release import RELEASE_LABEL, is_dev
 
@@ -27,6 +28,15 @@ RUN_TIMEOUT = 60 * 60
 POLL_SECONDS = 20
 STATE = {}
 SEEN_RUNS = set()
+# argv: the URL to fetch. A live lookup, and whether it fell back to the bundled copy or loaded httpx.
+E9_LOOKUP = """import json, sys
+import ctxlen
+from ctxlen import _latest, _resolve
+_latest.URL = sys.argv[1]
+answer = ctxlen.max_input("gpt-4o")
+print(json.dumps({"answer": answer, "bundled_read": _resolve.shipped_index.cache_info().currsize > 0,
+                  "httpx": "httpx" in sys.modules}))
+"""
 
 
 def when(timestamp):
@@ -124,7 +134,9 @@ def install(version, scratch):
         "import importlib.resources, sys; "
         "sys.stdout.buffer.write(importlib.resources.files('ctxlen').joinpath('_data.json').read_bytes())"
     )
-    return data, int(stdout("import ctxlen; print(ctxlen.max_input('gpt-4o'))"))
+    return data, int(
+        stdout("import ctxlen; print(ctxlen.max_input('gpt-4o', live=False))")
+    )
 
 
 def test_dispatch_publishes_a_dev_release_that_installs_and_answers(tmp_path):
@@ -143,7 +155,32 @@ def test_dispatch_publishes_a_dev_release_that_installs_and_answers(tmp_path):
     expected = find_row("gpt-4o", build_index(json.loads(recorded)))[1][1]
     assert answer == expected > 0
     assert f"v{version}" in tags()
-    STATE.update(force_run=run_id, version=version)
+    STATE.update(force_run=run_id, version=version, recorded=recorded)
+
+
+def test_the_dev_release_fetches_its_tags_data_once_and_a_second_process_reads_the_cache(
+    tmp_path,
+):
+    version, recorded = STATE["version"], json.loads(STATE["recorded"])
+    install(version, tmp_path)
+    url = _latest.URL.replace("/main/", f"/v{version}/", 1)
+    environment = {**os.environ, "XDG_CACHE_HOME": str(tmp_path / "cache")}
+    environment.pop("CTXLEN_OFFLINE", None)
+
+    def look_up():
+        python = str(tmp_path / "venv" / "bin" / "python")
+        command = [python, "-c", E9_LOOKUP, url]
+        done = subprocess.run(
+            command, env=environment, capture_output=True, check=True, cwd=tmp_path
+        )
+        return json.loads(done.stdout)
+
+    expected = find_row("gpt-4o", build_index(recorded))[1][1]
+    assert look_up() == {"answer": expected, "bundled_read": False, "httpx": True}
+    cache = json.loads((tmp_path / "cache" / "ctxlen" / "data-1.json").read_text())
+    assert cache["data"] == recorded
+    assert recorded["format"] == FORMAT
+    assert look_up() == {"answer": expected, "bundled_read": False, "httpx": False}
 
 
 def test_replayed_inputs_publish_nothing():

@@ -1,6 +1,12 @@
+import os
+
 import pytest
 
 from ctxlen._resolve import build_index
+
+# The unit tier tests the checkout's data, and so do the subprocesses it starts; a test of
+# the live path unsets it.
+os.environ["CTXLEN_OFFLINE"] = "1"
 
 # A _data.json in miniature: litellm's rows and its two routing rules, with models.dev contexts
 # and two fills. A row is [litellm_provider, max_input, max_output, models.dev context].
