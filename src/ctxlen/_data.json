@@ -4778,6 +4778,7 @@
 "nano-gpt/TheDrummer/Cydonia-24B-v4.3":["nano-gpt",32768,null,32768],
 "nano-gpt/TheDrummer/Magidonia-24B-v4.3":["nano-gpt",32768,null,32768],
 "nano-gpt/TheDrummer/Rocinante-12B-v1.1":["nano-gpt",16384,8192,16384],
+"nano-gpt/TheDrummer/Skyfall-31B-v4.2":["nano-gpt",16384,8192,16384],
 "nano-gpt/TheDrummer/UnslopNemo-12B-v4.1":["nano-gpt",8192,null,8192],
 "nano-gpt/TheDrummer/skyfall-36b-v2":["nano-gpt",32768,29491,32768],
 "nano-gpt/VongolaChouko/Starcannon-Unleashed-12B-v1.0":["nano-gpt",16384,8192,16384],
