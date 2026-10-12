@@ -19,7 +19,7 @@ ctxlen.ctxlen("claude-opus-5-5")  # 1_000_000
 ctxlen.ctxlen("gpt-6-sol")        # 1_050_000
 ```
 
-litellm ids, provider first, work too:
+You can also put the provider in front, like litellm does:
 
 ```python
 ctxlen.ctxlen("anthropic/claude-sonnet-5-5")  # 1_000_000
