@@ -155,12 +155,13 @@ def test_replayed_inputs_publish_nothing():
     assert set(pypi_releases()) == before
 
 
-def test_every_version_has_its_tag_and_attestation_and_every_tag_its_version():
+def test_every_unyanked_version_has_its_tag_every_file_its_attestation_and_every_tag_its_version():
     releases = pypi_releases()
     version_tags = {tag for tag in tags() if tag.startswith("v")}
     assert STATE["version"] in releases
     for version, files in releases.items():
-        assert f"v{version}" in version_tags, version
+        if not all(file["yanked"] for file in files):
+            assert f"v{version}" in version_tags, version
         for file in files:
             url = f"https://pypi.org/integrity/ctxlen/{version}/{file['filename']}/provenance"
             with urllib.request.urlopen(url, timeout=60) as response:
