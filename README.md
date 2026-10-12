@@ -1,6 +1,6 @@
 # ctxlen 📏
 
-How many tokens fit? 🤔 Look up the context limits (input and output tokens) of LLMs.
+A super minimal project to look up the context limits (input and output tokens) of LLMs. 🤔
 
 - 🪶 Zero dependencies and no network calls: drop it into any project.
 - 🔄 Checked for new models every 6 hours.
