@@ -1,14 +1,14 @@
 {
- "built_at": "2026-10-11T22:17:33Z",
+ "built_at": "2026-10-12T00:24:24Z",
  "litellm": {
-  "commit": "c0ca4a51f76013e22c19a1c5a90e5f316d978ee5",
-  "json_sha256": "42bd693443127deee28dd7ea3edbebe1f34737a82fda11ceb70f72bbbb66c308",
+  "commit": "102619d47a78d80f0383c9e8f52446046f0ecc6b",
+  "json_sha256": "10764517ded77844701b88837070f749d1b26c2573eb0ffd330b189a33d7d138",
   "release": "1.104.2"
  },
  "models_dev": {
-  "api_sha256": "9b1ff57995dbe2323d69d2f8ad5f72fdb0de27760d122a7ec933c2a0fa3cd001",
-  "fetched_at": "2026-10-11T20:10:44Z",
-  "dev_head": "e6932ba604bb3644f62993c19ad5d93a47490aac"
+  "api_sha256": "2bdd371fbaa2f7f728bed295bdcec48b770421d77627f9dd7b6e21e80dd1cbcf",
+  "fetched_at": "2026-10-12T00:24:20Z",
+  "dev_head": "ee7a2a5a73583b0fdd9b39caf4013ffe4ea5c6c8"
  },
  "rows": {
   "litellm": 4040,
@@ -24,7 +24,7 @@
  },
  "dropped_padding": 315,
  "skipped_models_dev": 0,
- "disagreements": 285,
+ "disagreements": 273,
  "coverage": {
   "catalog": 2752,
   "litellm_alone": 906,
@@ -34,11 +34,30 @@
   "total_none": 303
  },
  "gate": {
-  "previous": {
-   "rows": 4040,
-   "fills": 1653,
-   "providers": 170
-  },
+  "previous": null,
   "shrink_limit": 0.25
+ },
+ "version": "2026.10.12.1",
+ "e4": {
+  "wheel_bytes": 55568,
+  "requires_dist": [],
+  "sdist_extra": [],
+  "sdist_missing": [],
+  "probes": {
+   "3.13": {
+    "import_ms": 4.767450999999312,
+    "first_lookup_ms": 41.169902999996566,
+    "slowest_later_ms": 0.10331400000040958,
+    "gpt_4o": 128000,
+    "network_refused": true
+   },
+   "3.9": {
+    "import_ms": 10.76437700000099,
+    "first_lookup_ms": 58.39874299999792,
+    "slowest_later_ms": 0.10498599999664293,
+    "gpt_4o": 128000,
+    "network_refused": true
+   }
+  }
  }
 }
