@@ -26,6 +26,16 @@ MEMO: Memo | None = None  # this process's answer; None in a new process
 LOCK = _thread.allocate_lock()  # many threads, one fetch
 
 
+def renew_lock() -> None:
+    """A fresh LOCK: run in a forked child, where a fetch in the parent would never release it."""
+    global LOCK
+    LOCK = _thread.allocate_lock()
+
+
+if hasattr(os, "register_at_fork"):
+    os.register_at_fork(after_in_child=renew_lock)
+
+
 def index() -> _resolve.Index:
     """The index a live lookup resolves against. Never raises. Waits at most about DEADLINE,
     at most once per TTL per machine (once per TTL per process when the cache is unusable)."""

@@ -3,6 +3,7 @@ leaving the machine: the fetch is faked, or served from 127.0.0.1."""
 
 import contextlib
 import json
+import multiprocessing
 import os
 import socket
 import ssl
@@ -11,6 +12,7 @@ import sys
 import threading
 import time
 import types
+import warnings
 from concurrent.futures import ThreadPoolExecutor
 from gzip import compress
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -493,3 +495,23 @@ def test_a_failed_cache_write_leaves_the_previous_file_and_no_temp_file(
     assert downloads.call_count == 1
     assert cache_file.read_bytes() == stale
     assert [path.name for path in cache_file.parent.iterdir()] == ["data-1.json"]
+
+
+# The fork hook
+
+
+@pytest.mark.skipif(not hasattr(os, "fork"), reason="needs os.fork")
+def test_a_child_forked_during_a_fetch_can_look_up(downloads):
+    def look_up():
+        answer = ctxlen.max_input("gpt-4o")
+        assert type(answer) is int and answer > 0
+
+    child = multiprocessing.get_context("fork").Process(target=look_up)
+    with _latest.LOCK:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", DeprecationWarning)  # 3.12+: a live worker
+            child.start()
+        child.join(5)
+    child.kill()  # one stuck on the held lock it inherited; a no-op once it has exited
+    child.join()
+    assert child.exitcode == 0
