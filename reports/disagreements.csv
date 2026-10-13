@@ -82,6 +82,7 @@ deepinfra/deepseek-ai/DeepSeek-V3,max_output,163840,8192,deepinfra/deepseek-ai/D
 deepinfra/deepseek-ai/DeepSeek-V3.1,max_output,163840,8192,deepinfra/deepseek-ai/DeepSeek-V3.1
 deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo,max_output,131072,16384,deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo
 deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct,max_output,327680,16384,deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct
+deepinfra/mistralai/Mistral-Small-24B-Instruct-2501,max_output,32768,16384,deepinfra/mistralai/Mistral-Small-24B-Instruct-2501
 deepinfra/openai/gpt-oss-120b,max_output,131072,16384,deepinfra/openai/gpt-oss-120b
 deepinfra/openai/gpt-oss-20b,max_output,131072,16384,deepinfra/openai/gpt-oss-20b
 deepseek.r1-v1:0,max_output,8192,32768,amazon-bedrock/deepseek.r1-v1:0
