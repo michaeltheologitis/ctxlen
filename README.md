@@ -1,6 +1,6 @@
 # ctxlen 📏
 
-A super minimal, always-fresh, project to look up the context limits (input and output tokens) of LLMs. 🤔
+A super minimal-dependency, always-fresh, project to look up the context limits (input and output tokens) of LLMs. 🤔
 
 - 🔄 New models checked every 6 hours, and your install picks them up within the hour: no upgrade needed.
 - 🪶 Just httpx and certifi as dependencies, and it still works offline, with the numbers it shipped with.
