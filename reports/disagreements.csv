@@ -113,6 +113,7 @@ gemini/gemini-2.5-flash-image,context,65536,32768,google/gemini-2.5-flash-image
 gemini/gemini-2.5-flash-image,max_input,65536,32768,google/gemini-2.5-flash-image
 gemini/gemini-3.5-live-translate-preview,context,131072,16384,google/gemini-3.5-live-translate-preview
 gemini/gemini-3.5-live-translate-preview,max_input,131072,16384,google/gemini-3.5-live-translate-preview
+gemini/gemini-4-argon,max_output,65536,32768,google/gemini-4-argon
 gemini/lyria-3-clip-preview,max_input,131072,1048576,google/lyria-3-clip-preview
 gemini/lyria-3-clip-preview,max_output,8192,65536,google/lyria-3-clip-preview
 gemini/lyria-3-pro-preview,max_input,131072,1048576,google/lyria-3-pro-preview
@@ -242,6 +243,7 @@ vertex_ai/claude-sonnet-4-6,max_output,64000,128000,google-vertex-anthropic/clau
 vertex_ai/claude-sonnet-4-6,max_output,64000,128000,google-vertex/claude-sonnet-4-6@default
 vertex_ai/codestral-2,max_output,128000,8192,google-vertex/codestral-2
 vertex_ai/gemini-3.1-flash-image,max_input,65536,131072,google-vertex/gemini-3.1-flash-image
+vertex_ai/gemini-4-argon,max_output,1048576,65536,google-vertex/gemini-4-argon
 vertex_ai/meta/llama-4-maverick-17b-128e-instruct-maas,context,1000000,524288,google-vertex/meta/llama-4-maverick-17b-128e-instruct-maas
 vertex_ai/meta/llama-4-maverick-17b-128e-instruct-maas,max_input,1000000,524288,google-vertex/meta/llama-4-maverick-17b-128e-instruct-maas
 vertex_ai/meta/llama-4-maverick-17b-128e-instruct-maas,max_output,1000000,8192,google-vertex/meta/llama-4-maverick-17b-128e-instruct-maas
