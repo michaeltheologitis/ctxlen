@@ -5054,6 +5054,7 @@
 "nano-gpt/kimi-k2-instruct-fast":["nano-gpt",131072,16384,131072],
 "nano-gpt/lightonai/LightOnOCR-2-1B":["nano-gpt",32768,8192,32768],
 "nano-gpt/liquid/lfm-2.5-2.6b":["nano-gpt",128000,32768,128000],
+"nano-gpt/liquid/lfm-2.5-24b-a2b":["nano-gpt",128000,8192,128000],
 "nano-gpt/longcat-2.0":["nano-gpt",1000000,131072,1000000],
 "nano-gpt/longcat-2.0:thinking":["nano-gpt",1000000,131072,1000000],
 "nano-gpt/longcat-2.5-preview":["nano-gpt",1000000,131072,1000000],
