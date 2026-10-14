@@ -197,8 +197,6 @@ openai.gpt-6-luna,max_input,1050000,922000,amazon-bedrock/openai.gpt-6-luna
 openai.gpt-6-sol,max_input,1050000,922000,amazon-bedrock/openai.gpt-6-sol
 openai.gpt-oss-120b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-120b-1:0
 openai.gpt-oss-20b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-20b-1:0
-ovhcloud/Mistral-7B-Instruct-v0.3,context,127000,65536,ovhcloud/mistral-7b-instruct-v0.3
-ovhcloud/Mistral-7B-Instruct-v0.3,max_input,127000,65536,ovhcloud/mistral-7b-instruct-v0.3
 ovhcloud/Mistral-Nemo-Instruct-2407,context,118000,65536,ovhcloud/mistral-nemo-instruct-2407
 ovhcloud/Mistral-Nemo-Instruct-2407,max_input,118000,65536,ovhcloud/mistral-nemo-instruct-2407
 qwen.qwen3-235b-a22b-2507-v1:0,max_output,8192,131072,amazon-bedrock/qwen.qwen3-235b-a22b-2507-v1:0
