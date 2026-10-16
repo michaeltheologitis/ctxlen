@@ -5069,6 +5069,7 @@
 "nano-gpt/failspy/Meta-Llama-3-70B-Instruct-abliterated-v3.5":["nano-gpt",8192,null,8192],
 "nano-gpt/fastgpt":["nano-gpt",32768,null,32768],
 "nano-gpt/featherless-ai/Qwerky-72B":["nano-gpt",32000,8192,32000],
+"nano-gpt/fireworks/ember-1":["nano-gpt",1048576,131072,1048576],
 "nano-gpt/gemini-2.0-pro-exp-02-05":["nano-gpt",2097152,8192,2097152],
 "nano-gpt/gemini-2.0-pro-reasoner":["nano-gpt",128000,65536,128000],
 "nano-gpt/gemini-2.5-flash":["nano-gpt",1048576,65536,1048576],
