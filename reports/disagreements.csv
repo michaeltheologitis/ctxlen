@@ -113,7 +113,7 @@ gemini/gemini-2.5-flash-image,context,65536,32768,google/gemini-2.5-flash-image
 gemini/gemini-2.5-flash-image,max_input,65536,32768,google/gemini-2.5-flash-image
 gemini/gemini-3.5-live-translate-preview,context,131072,16384,google/gemini-3.5-live-translate-preview
 gemini/gemini-3.5-live-translate-preview,max_input,131072,16384,google/gemini-3.5-live-translate-preview
-gemini/gemini-4-argon,max_output,65536,32768,google/gemini-4-argon
+gemini/gemini-4-argon,max_output,1048576,32768,google/gemini-4-argon
 gemini/lyria-3-clip-preview,max_input,131072,1048576,google/lyria-3-clip-preview
 gemini/lyria-3-clip-preview,max_output,8192,65536,google/lyria-3-clip-preview
 gemini/lyria-3-pro-preview,max_input,131072,1048576,google/lyria-3-pro-preview
@@ -193,6 +193,10 @@ oci/meta.llama-4-maverick-17b-128e-instruct-fp8,max_output,8192,16384,oci/meta.l
 oci/meta.llama-4-scout-17b-16e-instruct,context,10485760,192000,oci/meta.llama-4-scout-17b-16e-instruct
 oci/meta.llama-4-scout-17b-16e-instruct,max_input,10485760,192000,oci/meta.llama-4-scout-17b-16e-instruct
 oci/meta.llama-4-scout-17b-16e-instruct,max_output,8192,16384,oci/meta.llama-4-scout-17b-16e-instruct
+oci/openai.gpt-oss-120b,max_output,128000,16384,oci/openai.gpt-oss-120b
+oci/openai.gpt-oss-20b,max_output,128000,16384,oci/openai.gpt-oss-20b
+oci/xai.grok-4.20-non-reasoning,max_output,1000000,30000,oci/xai.grok-4.20-non-reasoning
+oci/xai.grok-4.20-reasoning,max_output,1000000,30000,oci/xai.grok-4.20-reasoning
 openai.gpt-6-luna,max_input,1050000,922000,amazon-bedrock/openai.gpt-6-luna
 openai.gpt-6-sol,max_input,1050000,922000,amazon-bedrock/openai.gpt-6-sol
 openai.gpt-oss-120b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-120b-1:0
@@ -254,6 +258,7 @@ vertex_ai/xai/grok-4.20-reasoning,max_output,2000000,30000,google-vertex/xai/gro
 vertex_ai/xai/grok-4.3,max_output,200000,30000,google-vertex/xai/grok-4.3
 wandb/deepseek-ai/DeepSeek-V4-Pro-0813,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4-Pro-0813
 wandb/deepseek-ai/DeepSeek-V4.1-Flash,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4.1-Flash
+wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B,context,1049000,1048576,wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
 wandb/zai-org/GLM-5.2,context,1049000,1048576,wandb/zai-org/GLM-5.2
 wandb/zai-org/GLM-5.3-Flash,context,1049000,1048576,wandb/zai-org/GLM-5.3-Flash
 watsonx/meta-llama/llama-3-3-70b-instruct,max_output,131072,4096,watsonx/meta-llama/llama-3-3-70b-instruct
