@@ -80,6 +80,7 @@ deepinfra/Qwen/Qwen3-Next-80B-A3B-Instruct,max_output,262144,32768,deepinfra/Qwe
 deepinfra/deepseek-ai/DeepSeek-R1-0528,max_output,163840,64000,deepinfra/deepseek-ai/DeepSeek-R1-0528
 deepinfra/deepseek-ai/DeepSeek-V3,max_output,163840,8192,deepinfra/deepseek-ai/DeepSeek-V3
 deepinfra/deepseek-ai/DeepSeek-V3.1,max_output,163840,8192,deepinfra/deepseek-ai/DeepSeek-V3.1
+deepinfra/deepseek-ai/DeepSeek-V4.1-Flash,max_output,131072,384000,deepinfra/deepseek-ai/DeepSeek-V4.1-Flash
 deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo,max_output,131072,16384,deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo
 deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct,max_output,327680,16384,deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct
 deepinfra/mistralai/Mistral-Small-24B-Instruct-2501,max_output,32768,16384,deepinfra/mistralai/Mistral-Small-24B-Instruct-2501
