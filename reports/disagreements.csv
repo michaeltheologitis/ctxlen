@@ -95,6 +95,7 @@ deepseek.v3.2,max_output,8000,81920,amazon-bedrock/deepseek.v3.2
 eu.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/eu.anthropic.claude-sonnet-4-6
 eu.mistral.pixtral-large-2502-v1:0,max_output,16384,8192,amazon-bedrock/eu.mistral.pixtral-large-2502-v1:0
 fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash,context,1048576,1000000,fireworks-ai/accounts/fireworks/models/deepseek-v4p1-flash
+fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash-1017,context,1048576,1000000,fireworks-ai/accounts/fireworks/models/deepseek-v4p1-flash-1017
 fireworks_ai/accounts/fireworks/models/glm-5p3,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3,max_output,128000,262144,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3-flash,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3-flash
@@ -209,6 +210,8 @@ ovhcloud/Mistral-Nemo-Instruct-2407,max_input,118000,65536,ovhcloud/mistral-nemo
 qwen.qwen3-235b-a22b-2507-v1:0,max_output,8192,131072,amazon-bedrock/qwen.qwen3-235b-a22b-2507-v1:0
 qwen.qwen3-32b-v1:0,max_output,8192,16384,amazon-bedrock/qwen.qwen3-32b-v1:0
 qwen.qwen3-coder-30b-a3b-v1:0,max_output,16384,131072,amazon-bedrock/qwen.qwen3-coder-30b-a3b-v1:0
+qwen.qwen3-coder-480b-a35b-v1:0,context,262144,131072,amazon-bedrock/qwen.qwen3-coder-480b-a35b-v1:0
+qwen.qwen3-coder-480b-a35b-v1:0,max_input,262144,131072,amazon-bedrock/qwen.qwen3-coder-480b-a35b-v1:0
 qwen.qwen3-coder-480b-a35b-v1:0,max_output,16384,65536,amazon-bedrock/qwen.qwen3-coder-480b-a35b-v1:0
 qwen.qwen3-coder-next,max_output,16000,65536,amazon-bedrock/qwen.qwen3-coder-next
 qwen.qwen3-next-80b-a3b,max_output,8000,262000,amazon-bedrock/qwen.qwen3-next-80b-a3b
