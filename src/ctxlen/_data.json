@@ -4563,7 +4563,6 @@
 "cortecs/nova-micro-v1":["cortecs",128000,10000,128000],
 "cortecs/nova-pro-v1":["cortecs",300000,10000,300000],
 "cortecs/nvidia-nemotron-3-nano-30b-a3b":["cortecs",256000,null,256000],
-"cortecs/pixtral-12b-2409":["cortecs",128000,4096,128000],
 "cortecs/pixtral-large-2502":["cortecs",128000,null,128000],
 "cortecs/qwen2.5-vl-72b-instruct":["cortecs",32000,null,32000],
 "cortecs/qwen3-235b-a22b-instruct-2507":["cortecs",262000,null,262000],
