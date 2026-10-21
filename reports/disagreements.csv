@@ -1,7 +1,4 @@
 key,field,litellm,models_dev,source
-aihubmix/claude-opus-4-8-think,context,1000000,200000,aihubmix/claude-opus-4-8-think
-aihubmix/claude-opus-4-8-think,max_input,1000000,200000,aihubmix/claude-opus-4-8-think
-aihubmix/claude-opus-4-8-think,max_output,128000,32000,aihubmix/claude-opus-4-8-think
 aihubmix/glm-5.3,context,1048576,1000000,aihubmix/glm-5.3
 aihubmix/glm-5.3-flash,context,1048576,1000000,aihubmix/glm-5.3-flash
 aihubmix/gpt-5.3-codex,max_input,400000,272000,aihubmix/gpt-5.3-codex
@@ -15,8 +12,6 @@ aihubmix/hy3,max_input,256000,192000,aihubmix/hy3
 aihubmix/hy4-preview,context,1048576,1024000,aihubmix/hy4-preview
 aihubmix/kimi-k3,max_output,1048576,131072,aihubmix/kimi-k3
 aihubmix/minimax-m2.7,max_output,204800,128000,aihubmix/minimax-m2.7
-aihubmix/qwen3.6-max-preview,context,262144,240000,aihubmix/qwen3.6-max-preview
-aihubmix/qwen3.6-max-preview,max_input,262144,240000,aihubmix/qwen3.6-max-preview
 aihubmix/qwen3.7-flash,context,991808,991000,aihubmix/qwen3.7-flash
 aihubmix/qwen3.7-plus,context,1000000,991000,aihubmix/qwen3.7-plus
 aihubmix/qwen3.7-plus,max_output,131072,64000,aihubmix/qwen3.7-plus
@@ -52,9 +47,6 @@ cloudflare/@cf/google/gemma-4-26b-a4b-it,max_output,256000,16384,cloudflare-work
 cloudflare/@cf/meta/llama-4-scout-17b-16e-instruct,max_output,131000,16384,cloudflare-workers-ai/@cf/meta/llama-4-scout-17b-16e-instruct
 cloudflare/@cf/openai/gpt-oss-120b,max_output,128000,16384,cloudflare-workers-ai/@cf/openai/gpt-oss-120b
 cloudflare/@cf/openai/gpt-oss-20b,max_output,128000,16384,cloudflare-workers-ai/@cf/openai/gpt-oss-20b
-crusoe/Qwen/Qwen3-235B-A22B-Instruct-2507,max_output,262144,16384,crusoe/Qwen/Qwen3-235B-A22B-Instruct-2507
-crusoe/meta-llama/Llama-3.3-70B-Instruct,context,131072,128000,crusoe/meta-llama/Llama-3.3-70B-Instruct
-crusoe/meta-llama/Llama-3.3-70B-Instruct,max_output,131072,4096,crusoe/meta-llama/Llama-3.3-70B-Instruct
 crusoe/openai/gpt-oss-120b,max_output,131072,32768,crusoe/openai/gpt-oss-120b
 dashscope/glm-5.2,context,1048576,1000000,alibaba/glm-5.2
 dashscope/qwen-max,max_input,30720,32768,alibaba/qwen-max
@@ -126,11 +118,9 @@ gpt-5.5-pro,max_input,1050000,922000,openai/gpt-5.5-pro
 gpt-daybreak-red-latest,max_input,400000,272000,openai/gpt-daybreak-red-latest
 gpt-realtime-2.1,max_input,128000,96000,openai/gpt-realtime-2.1
 gradient_ai/llama3-8b-instruct,max_input,8192,131072,digitalocean/llama3-8b-instruct
+helicone/gpt-5-chat-latest,context,272000,128000,helicone/gpt-5-chat-latest
+helicone/gpt-5-pro,context,272000,128000,helicone/gpt-5-pro
 jp.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/jp.anthropic.claude-sonnet-4-6
-meta_llama/Llama-4-Maverick-17B-128E-Instruct-FP8,context,1000000,128000,llama/llama-4-maverick-17b-128e-instruct-fp8
-meta_llama/Llama-4-Maverick-17B-128E-Instruct-FP8,max_input,1000000,128000,llama/llama-4-maverick-17b-128e-instruct-fp8
-meta_llama/Llama-4-Scout-17B-16E-Instruct-FP8,context,10000000,128000,llama/llama-4-scout-17b-16e-instruct-fp8
-meta_llama/Llama-4-Scout-17B-16E-Instruct-FP8,max_input,10000000,128000,llama/llama-4-scout-17b-16e-instruct-fp8
 minimax.minimax-m2.5,max_output,8000,98304,amazon-bedrock/minimax.minimax-m2.5
 minimax/MiniMax-M3,max_output,128000,524288,minimax/MiniMax-M3
 mistral.ministral-3-14b-instruct,max_output,8000,4096,amazon-bedrock/mistral.ministral-3-14b-instruct
@@ -176,6 +166,8 @@ openai.gpt-oss-120b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-12
 openai.gpt-oss-20b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-20b-1:0
 ovhcloud/Mistral-Nemo-Instruct-2407,context,118000,65536,ovhcloud/mistral-nemo-instruct-2407
 ovhcloud/Mistral-Nemo-Instruct-2407,max_input,118000,65536,ovhcloud/mistral-nemo-instruct-2407
+poe/openai/gpt-5.5,context,922000,400000,poe/openai/gpt-5.5
+poe/openai/gpt-5.5-pro,context,922000,400000,poe/openai/gpt-5.5-pro
 qwen.qwen3-235b-a22b-2507-v1:0,max_output,8192,131072,amazon-bedrock/qwen.qwen3-235b-a22b-2507-v1:0
 qwen.qwen3-32b-v1:0,max_output,8192,16384,amazon-bedrock/qwen.qwen3-32b-v1:0
 qwen.qwen3-coder-next,max_output,16000,65536,amazon-bedrock/qwen.qwen3-coder-next
