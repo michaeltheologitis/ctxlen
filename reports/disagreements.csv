@@ -236,7 +236,9 @@ vertex_ai/xai/grok-4.3,max_output,200000,30000,google-vertex/xai/grok-4.3
 wandb/deepseek-ai/DeepSeek-V4-Pro-0813,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4-Pro-0813
 wandb/deepseek-ai/DeepSeek-V4.1-Flash,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4.1-Flash
 wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B,context,1049000,1048576,wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
+wandb/reflection/Beam-1.0-501B-A23B,context,1049000,1048576,wandb/reflection/Beam-1.0-501B-A23B
 wandb/zai-org/GLM-5.2,context,1049000,1048576,wandb/zai-org/GLM-5.2
+wandb/zai-org/GLM-5.3,context,1049000,1048576,wandb/zai-org/GLM-5.3
 wandb/zai-org/GLM-5.3-Flash,context,1049000,1048576,wandb/zai-org/GLM-5.3-Flash
 watsonx/meta-llama/llama-3-3-70b-instruct,max_output,131072,4096,watsonx/meta-llama/llama-3-3-70b-instruct
 watsonx/openai/gpt-oss-120b,max_output,131072,32768,watsonx/openai/gpt-oss-120b
