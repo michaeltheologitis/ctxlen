@@ -62,10 +62,8 @@ dashscope/qwen-plus,max_input,129024,1000000,alibaba/qwen-plus
 dashscope/qwen-plus,max_output,16384,32768,alibaba/qwen-plus
 dashscope/qwen3.7-max,max_output,65536,131072,alibaba/qwen3.7-max
 dashscope/qwen3.7-plus,max_output,65536,131072,alibaba/qwen3.7-plus
-databricks/databricks-gpt-5-6-luna,context,922000,400000,databricks/databricks-gpt-5-6-luna
-databricks/databricks-gpt-5-6-luna,max_input,922000,272000,databricks/databricks-gpt-5-6-luna
-databricks/databricks-gpt-oss-120b,max_output,131072,32768,databricks/databricks-gpt-oss-120b
-databricks/databricks-gpt-oss-20b,max_output,131072,32768,databricks/databricks-gpt-oss-20b
+databricks/databricks-gpt-oss-120b,max_output,131072,25000,databricks/databricks-gpt-oss-120b
+databricks/databricks-gpt-oss-20b,max_output,131072,25000,databricks/databricks-gpt-oss-20b
 deepinfra/Qwen/Qwen3-235B-A22B-Instruct-2507,max_output,262144,16384,deepinfra/Qwen/Qwen3-235B-A22B-Instruct-2507
 deepinfra/Qwen/Qwen3-30B-A3B,max_output,40960,16384,deepinfra/Qwen/Qwen3-30B-A3B
 deepinfra/Qwen/Qwen3-32B,max_output,40960,16384,deepinfra/Qwen/Qwen3-32B
@@ -90,7 +88,6 @@ fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash-1017,context,1048576,
 fireworks_ai/accounts/fireworks/models/glm-5p3,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3,max_output,128000,262144,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3-flash,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3-flash
-fireworks_ai/accounts/fireworks/models/nemotron-3-ultra-nvfp4,max_output,32768,128000,fireworks-ai/accounts/fireworks/models/nemotron-3-ultra-nvfp4
 fireworks_ai/accounts/fireworks/routers/glm-5p3-fast,context,1048576,1048572,fireworks-ai/accounts/fireworks/routers/glm-5p3-fast
 friendliai/MiniMaxAI/MiniMax-M2.5,max_output,196608,131072,friendli/MiniMaxAI/MiniMax-M2.5
 friendliai/deepseek-ai/DeepSeek-V3.2,max_output,163840,64000,friendli/deepseek-ai/DeepSeek-V3.2
@@ -128,12 +125,7 @@ gpt-5.5,max_input,1050000,922000,openai/gpt-5.5
 gpt-5.5-pro,max_input,1050000,922000,openai/gpt-5.5-pro
 gpt-daybreak-red-latest,max_input,400000,272000,openai/gpt-daybreak-red-latest
 gpt-realtime-2.1,max_input,128000,96000,openai/gpt-realtime-2.1
-gradient_ai/alibaba-qwen3-32b,context,131072,32768,digitalocean/alibaba-qwen3-32b
-gradient_ai/alibaba-qwen3-32b,max_input,131072,32768,digitalocean/alibaba-qwen3-32b
-gradient_ai/deepseek-r1-distill-llama-70b,context,32768,32678,digitalocean/deepseek-r1-distill-llama-70b
 gradient_ai/llama3-8b-instruct,max_input,8192,131072,digitalocean/llama3-8b-instruct
-gradient_ai/llama3.3-70b-instruct,max_output,2048,4096,digitalocean/llama3.3-70b-instruct
-groq/qwen/qwen3.8-27b,context,131072,131042,groq/qwen/qwen3.8-27b
 jp.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/jp.anthropic.claude-sonnet-4-6
 meta_llama/Llama-4-Maverick-17B-128E-Instruct-FP8,context,1000000,128000,llama/llama-4-maverick-17b-128e-instruct-fp8
 meta_llama/Llama-4-Maverick-17B-128E-Instruct-FP8,max_input,1000000,128000,llama/llama-4-maverick-17b-128e-instruct-fp8
@@ -190,9 +182,12 @@ qwen.qwen3-coder-next,max_output,16000,65536,amazon-bedrock/qwen.qwen3-coder-nex
 qwen.qwen3-next-80b-a3b,max_output,8000,262000,amazon-bedrock/qwen.qwen3-next-80b-a3b
 qwen.qwen3-vl-235b-a22b,max_output,8000,262000,amazon-bedrock/qwen.qwen3-vl-235b-a22b
 scx-ai/GLM-5.2,context,1048576,1000000,scx-ai/GLM-5.2
+snowflake/claude-haiku-4-5,max_output,16384,64000,snowflake-cortex/claude-haiku-4-5
+snowflake/claude-sonnet-4-5,max_output,16384,64000,snowflake-cortex/claude-sonnet-4-5
 snowflake/claude-sonnet-4-6,max_input,200000,1000000,snowflake-cortex/claude-sonnet-4-6
+snowflake/claude-sonnet-4-6,max_output,16384,64000,snowflake-cortex/claude-sonnet-4-6
 snowflake/deepseek-r1,max_output,16384,32768,snowflake-cortex/deepseek-r1
-snowflake/mistral-large2,max_input,128000,262144,snowflake-cortex/mistral-large2
+snowflake/mistral-large2,max_output,16384,8192,snowflake-cortex/mistral-large2
 snowflake/openai-gpt-4.1,context,300000,128000,snowflake-cortex/openai-gpt-4.1
 snowflake/openai-gpt-4.1,max_input,300000,128000,snowflake-cortex/openai-gpt-4.1
 snowflake/openai-gpt-4.1,max_output,16384,32000,snowflake-cortex/openai-gpt-4.1
