@@ -81,7 +81,6 @@ fireworks_ai/accounts/fireworks/models/glm-5p3,context,1048576,1048573,fireworks
 fireworks_ai/accounts/fireworks/models/glm-5p3,max_output,128000,262144,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3-flash,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3-flash
 fireworks_ai/accounts/fireworks/routers/glm-5p3-fast,context,1048576,1048572,fireworks-ai/accounts/fireworks/routers/glm-5p3-fast
-friendliai/MiniMaxAI/MiniMax-M2.5,max_output,196608,131072,friendli/MiniMaxAI/MiniMax-M2.5
 friendliai/deepseek-ai/DeepSeek-V3.2,max_output,163840,64000,friendli/deepseek-ai/DeepSeek-V3.2
 friendliai/google/gemma-4-31B-it,max_output,262144,32768,friendli/google/gemma-4-31B-it
 friendliai/zai-org/GLM-5.1,max_output,202752,131072,friendli/zai-org/GLM-5.1
