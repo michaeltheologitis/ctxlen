@@ -3627,7 +3627,7 @@
 "deepinfra/Qwen/Qwen3.6-35B-A3B":["deepinfra",262144,81920,262144],
 "deepinfra/nvidia/Nemotron-Content-Safety-3.5":["deepinfra",131072,null,null],
 "deepinfra/anthropic/claude-opus-5":["deepinfra",1000000,null,null],
-"deepinfra/thinkingmachines/Inkling":["deepinfra",524288,null,524288],
+"deepinfra/thinkingmachines/Inkling":["deepinfra",524288,null,null],
 "deepinfra/moonshotai/Kimi-K2.6":["deepinfra",262144,16384,262144],
 "deepinfra/deepseek-ai/DeepSeek-V4-Pro-0813":["deepinfra",1048576,384000,1048576],
 "deepinfra/Qwen/Qwen3.7-Max":["deepinfra",256000,131072,256000],
