@@ -5170,7 +5170,7 @@
 "nano-gpt/minimax/minimax-m2.7":["nano-gpt",204800,131072,204800],
 "nano-gpt/minimax/minimax-m2.7-turbo":["nano-gpt",204800,131072,204800],
 "nano-gpt/minimax/minimax-m3":["nano-gpt",512000,80000,512000],
-"nano-gpt/minimax/minimax-m3.1-flash":["nano-gpt",1000000,524288,1000000],
+"nano-gpt/minimax/minimax-m3.1-flash":["nano-gpt",1048576,524288,1048576],
 "nano-gpt/minimax/minimax-m3:thinking":["nano-gpt",512000,80000,512000],
 "nano-gpt/mistral-code-agent-latest":["nano-gpt",262144,32768,262144],
 "nano-gpt/mistral-code-latest":["nano-gpt",256000,32768,256000],
