@@ -80,6 +80,8 @@ fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash-1017,context,1048576,
 fireworks_ai/accounts/fireworks/models/glm-5p3,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3,max_output,128000,262144,fireworks-ai/accounts/fireworks/models/glm-5p3
 fireworks_ai/accounts/fireworks/models/glm-5p3-flash,context,1048576,1048573,fireworks-ai/accounts/fireworks/models/glm-5p3-flash
+fireworks_ai/accounts/fireworks/models/minimax-m3p1-flash,context,1048576,1000000,fireworks-ai/accounts/fireworks/models/minimax-m3p1-flash
+fireworks_ai/accounts/fireworks/models/minimax-m3p1-flash,max_output,1048576,512000,fireworks-ai/accounts/fireworks/models/minimax-m3p1-flash
 fireworks_ai/accounts/fireworks/routers/glm-5p3-fast,context,1048576,1048572,fireworks-ai/accounts/fireworks/routers/glm-5p3-fast
 friendliai/deepseek-ai/DeepSeek-V3.2,max_output,163840,64000,friendli/deepseek-ai/DeepSeek-V3.2
 friendliai/google/gemma-4-31B-it,max_output,262144,32768,friendli/google/gemma-4-31B-it
@@ -116,7 +118,6 @@ gpt-5.5,max_input,1050000,922000,openai/gpt-5.5
 gpt-5.5-pro,max_input,1050000,922000,openai/gpt-5.5-pro
 gpt-daybreak-red-latest,max_input,400000,272000,openai/gpt-daybreak-red-latest
 gpt-realtime-2.1,max_input,128000,96000,openai/gpt-realtime-2.1
-gradient_ai/llama3-8b-instruct,max_input,8192,131072,digitalocean/llama3-8b-instruct
 helicone/gpt-5-chat-latest,context,272000,128000,helicone/gpt-5-chat-latest
 helicone/gpt-5-pro,context,272000,128000,helicone/gpt-5-pro
 jp.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/jp.anthropic.claude-sonnet-4-6
