@@ -1,14 +1,14 @@
 {
- "built_at": "2026-10-24T12:50:59Z",
+ "built_at": "2026-10-24T18:48:27Z",
  "litellm": {
-  "commit": "e04e89c7010809cc051b14f0e43d71dd018cdaee",
-  "json_sha256": "a9be5a76633f1a1f00e6365e9d93fd59609beed9b9426877f077a931d58f6884",
+  "commit": "4710c3b30e5c1459dbb11a060ad733ee06f06c18",
+  "json_sha256": "96f0e22080113578ac72bd0f7bf9afe4bcad19f04dc7d7ddc889062891c51a0f",
   "release": "1.106.2"
  },
  "models_dev": {
-  "api_sha256": "1dd5a3913bc490ce6845e0860f1114e3e51bfa63848af66e6f9702b5184fa5da",
-  "fetched_at": "2026-10-24T12:50:55Z",
-  "dev_head": "1824f6ad0fa6191b608221548d0a3efad97e6f58"
+  "api_sha256": "21a79a91139fce1a75ffdcfcbfe8249f9798b8726ae489eef31c2a1865b7ad1d",
+  "fetched_at": "2026-10-24T18:48:24Z",
+  "dev_head": "3c075dda4c387853250b493033f059bf5163b593"
  },
  "rows": {
   "litellm": 4259,
@@ -41,9 +41,9 @@
   },
   "shrink_limit": 0.25
  },
- "version": "2026.10.24.3",
+ "version": "2026.10.24.4",
  "e4": {
-  "wheel_bytes": 59808,
+  "wheel_bytes": 59809,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 4.604214000011098,
-    "first_lookup_ms": 38.57507300000407,
-    "slowest_later_ms": 0.07555499999511994,
+    "import_ms": 4.882724000005112,
+    "first_lookup_ms": 41.45354699999615,
+    "slowest_later_ms": 0.07514200000002802,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 139.15713299999766,
+    "default_lookup_ms": 146.9630550000005,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 9.348343999988629,
-    "first_lookup_ms": 50.58932100001812,
-    "slowest_later_ms": 0.08962699999415236,
+    "import_ms": 10.451619999997774,
+    "first_lookup_ms": 56.86535800000314,
+    "slowest_later_ms": 0.09649399999744901,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 225.4856350000125,
+    "default_lookup_ms": 251.76379500000223,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
