@@ -1,19 +1,19 @@
 {
- "built_at": "2026-10-24T18:48:27Z",
+ "built_at": "2026-10-25T01:14:03Z",
  "litellm": {
-  "commit": "4710c3b30e5c1459dbb11a060ad733ee06f06c18",
-  "json_sha256": "96f0e22080113578ac72bd0f7bf9afe4bcad19f04dc7d7ddc889062891c51a0f",
+  "commit": "2e52e0fb2a84b03f000b2c6498578036306710bd",
+  "json_sha256": "f153cf395fcdbade7dbdee81ff7d953e0e3713e1eeee5460f4577c1aed32cc17",
   "release": "1.106.2"
  },
  "models_dev": {
-  "api_sha256": "21a79a91139fce1a75ffdcfcbfe8249f9798b8726ae489eef31c2a1865b7ad1d",
-  "fetched_at": "2026-10-24T18:48:24Z",
-  "dev_head": "3c075dda4c387853250b493033f059bf5163b593"
+  "api_sha256": "c903fae45734f688e324fba1b14bb9d7c1cd28bb2b5f2673aaa850ba4953aa57",
+  "fetched_at": "2026-10-25T01:14:00Z",
+  "dev_head": "452dc52fc3366c24953f33db6c384fc72956fd26"
  },
  "rows": {
-  "litellm": 4259,
-  "with_input": 3391,
-  "with_output": 2964,
+  "litellm": 4305,
+  "with_input": 3439,
+  "with_output": 3012,
   "with_context": 715,
   "fills": 1440,
   "providers": 174
@@ -24,7 +24,7 @@
  },
  "dropped_padding": 298,
  "skipped_models_dev": 0,
- "disagreements": 240,
+ "disagreements": 242,
  "coverage": {
   "catalog": 2581,
   "litellm_alone": 846,
@@ -41,9 +41,9 @@
   },
   "shrink_limit": 0.25
  },
- "version": "2026.10.24.4",
+ "version": "2026.10.25.1",
  "e4": {
-  "wheel_bytes": 59809,
+  "wheel_bytes": 60120,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 4.882724000005112,
-    "first_lookup_ms": 41.45354699999615,
-    "slowest_later_ms": 0.07514200000002802,
+    "import_ms": 5.896835000001488,
+    "first_lookup_ms": 49.19960600000195,
+    "slowest_later_ms": 0.10146600000382477,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 146.9630550000005,
+    "default_lookup_ms": 181.67302900000948,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 10.451619999997774,
-    "first_lookup_ms": 56.86535800000314,
-    "slowest_later_ms": 0.09649399999744901,
+    "import_ms": 12.707620000000475,
+    "first_lookup_ms": 77.02245699999821,
+    "slowest_later_ms": 0.1310569999901645,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 251.76379500000223,
+    "default_lookup_ms": 485.2727940000108,
     "default_gpt_4o": 128000,
     "network_refused": true
    }

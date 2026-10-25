@@ -20,6 +20,7 @@ aihubmix/qwen3.8-2.4t-a95b,max_input,1000000,262000,aihubmix/qwen3.8-2.4t-a95b
 aihubmix/qwen3.8-max,context,1000000,991000,aihubmix/qwen3.8-max
 anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/anthropic.claude-sonnet-4-6
 au.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/au.anthropic.claude-sonnet-4-6
+azure/gpt-chat-latest,max_input,128000,272000,azure/gpt-chat-latest
 azure/model-router,max_output,32768,16384,azure/model-router
 azure_ai/Llama-3.3-70B-Instruct,max_output,8192,32768,azure-cognitive-services/llama-3.3-70b-instruct
 azure_ai/Llama-4-Maverick-17B-128E-Instruct-FP8,max_output,1000000,16384,azure-cognitive-services/llama-4-maverick-17b-128e-instruct-fp8
@@ -32,6 +33,7 @@ azure_ai/Phi-4-mini-reasoning,context,131072,128000,azure-cognitive-services/phi
 azure_ai/Phi-4-reasoning,context,32768,32000,azure-cognitive-services/phi-4-reasoning
 azure_ai/claude-sonnet-4-6,max_output,128000,64000,azure-cognitive-services/claude-sonnet-4-6
 azure_ai/deepseek-v4.1-flash,max_output,384000,128000,azure-cognitive-services/deepseek-v4.1-flash
+azure_ai/gpt-chat-latest,max_input,128000,272000,azure-cognitive-services/gpt-chat-latest
 azure_ai/grok-4-1-fast-non-reasoning,max_output,128000,8192,azure-cognitive-services/grok-4-1-fast-non-reasoning
 azure_ai/grok-4-1-fast-reasoning,max_output,128000,8192,azure-cognitive-services/grok-4-1-fast-reasoning
 azure_ai/ministral-3b,max_output,4096,8192,azure-cognitive-services/ministral-3b
