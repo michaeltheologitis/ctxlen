@@ -25,13 +25,6 @@ TASK_REF = "refs/heads/claude/hopeful-brown-gw7aqa"
 DAY = date(2026, 10, 11)
 EVENTS = ("push", "pull_request", "schedule", "workflow_dispatch")
 ALL_GREEN = dict.fromkeys(("build", "conformance", "publish", "record"), "success")
-BROKEN_RUNS = [
-    ({**ALL_GREEN, "build": "failure"}, None),
-    ({**ALL_GREEN, "publish": "failure", "record": "skipped"}, True),
-    ({**ALL_GREEN, "record": "failure"}, True),
-    ({**ALL_GREEN, "record": "cancelled"}, True),
-    (ALL_GREEN, False),
-]
 
 
 def plan(
@@ -216,19 +209,11 @@ def test_watchdog_pings_success_only_on_main_when_delivered():
     assert watchdog_verdict(TASK_REF, "none", ALL_GREEN, True, 0, "").ping is None
 
 
-@pytest.mark.parametrize("results, delivered", BROKEN_RUNS)
-def test_watchdog_pings_fail_on_main_for_a_failed_job_or_undelivered_content(
-    results, delivered
-):
-    assert watchdog_verdict(MAIN_REF, "none", results, delivered, 0, "").ping == "fail"
-
-
-@pytest.mark.parametrize("results, delivered", BROKEN_RUNS)
 @pytest.mark.parametrize("fault", [f for f in FAULTS if f != "alarm"])
-def test_watchdog_never_pings_off_main_without_the_alarm_fault(
-    fault, results, delivered
-):
-    assert watchdog_verdict(TASK_REF, fault, results, delivered, 0, "").ping is None
+def test_watchdog_never_pings_off_main_without_the_alarm_fault(fault):
+    broken = {**ALL_GREEN, "record": "failure"}
+    assert watchdog_verdict(TASK_REF, fault, ALL_GREEN, True, 0, "").ping is None
+    assert watchdog_verdict(TASK_REF, fault, broken, True, 0, "").ping is None
 
 
 def test_watchdog_pings_fail_for_the_alarm_fault():
@@ -244,20 +229,21 @@ def test_watchdog_pings_fail_for_the_alarm_fault():
             "gate: rows shrank",
             "gate: rows shrank",
         ),
-        ({**ALL_GREEN, "publish": "failure"}, True, "", "publish"),
+        ({**ALL_GREEN, "publish": "failure", "record": "skipped"}, True, "", "publish"),
         ({**ALL_GREEN, "record": "failure"}, True, "", "record job failed"),
         ({**ALL_GREEN, "record": "cancelled"}, True, "", "record job was cancelled"),
         (ALL_GREEN, False, "", "PyPI"),
     ],
 )
 @pytest.mark.parametrize("ref", [MAIN_REF, TASK_REF])
-def test_watchdog_opens_the_release_issue_for_a_failed_job_or_undelivered_content(
+def test_watchdog_opens_the_release_issue_and_pings_fail_on_main_for_a_broken_run(
     ref, results, delivered, reason, named
 ):
     verdict = watchdog_verdict(ref, "none", results, delivered, 0, reason)
     [(label, _, body)] = verdict.issues
     assert label == RELEASE_LABEL
     assert named in body and ref in body
+    assert verdict.ping == ("fail" if ref == MAIN_REF else None)
 
 
 def test_watchdog_opens_no_issue_when_all_is_well():

@@ -12,6 +12,7 @@ from typing import NamedTuple
 
 MAIN_REF = "refs/heads/main"
 FAULTS = ("none", "force", "shrink", "refuse", "alarm")
+BROKEN_RESULTS = ("failure", "cancelled")
 LITELLM_COOLDOWN = timedelta(days=3)
 RELEASE_LABEL = "ctxlen-release"
 CONFORMANCE_LABEL = "ctxlen-conformance"
@@ -155,18 +156,17 @@ def watchdog_verdict(
     nothing to check), and `reason` is why build failed. A body names the problem only, never
     the run, so it stays the same while the problem does.
 
-    On main it pings fail when build, publish or record failed or was cancelled (a timeout
-    cancels a job), or the content was not delivered, and success when it was delivered.
-    Conformance never pings: it has its own issue. Other refs ping only for the alarm fault:
-    the live tier makes their jobs fail on purpose.
+    A timeout cancels a job. Conformance never pings: it has its own issue. Off main only the
+    alarm fault pings, because the live tier makes jobs fail on purpose.
     """
     issues = []
     failed = [
         job
         for job in ("build", "publish", "record")
-        if results.get(job) in ("failure", "cancelled")
+        if results.get(job) in BROKEN_RESULTS
     ]
-    if failed or delivered is False:
+    broken = bool(failed) or delivered is False
+    if broken:
         lines = [f"The release on `{ref}` did not deliver."]
         for job in failed:
             cause = f": {reason}" if job == "build" and reason else ""
@@ -184,7 +184,7 @@ def watchdog_verdict(
         issues.append(
             (CONFORMANCE_LABEL, "ctxlen and litellm find different rows", body)
         )
-    if fault == "alarm" or (ref == MAIN_REF and (failed or delivered is False)):
+    if fault == "alarm" or (ref == MAIN_REF and broken):
         ping = "fail"
     elif ref == MAIN_REF and delivered:
         ping = "success"
