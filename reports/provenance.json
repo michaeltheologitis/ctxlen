@@ -1,49 +1,49 @@
 {
- "built_at": "2026-10-25T01:14:03Z",
+ "built_at": "2026-10-25T06:57:46Z",
  "litellm": {
-  "commit": "2e52e0fb2a84b03f000b2c6498578036306710bd",
-  "json_sha256": "f153cf395fcdbade7dbdee81ff7d953e0e3713e1eeee5460f4577c1aed32cc17",
+  "commit": "dddbaa803d6e9fcc862ea7a5412f771cb1ae040e",
+  "json_sha256": "12ea25ddb6f2427bf7be2550b5a160d8659136d8747cfddf62327701591d2226",
   "release": "1.106.2"
  },
  "models_dev": {
-  "api_sha256": "c903fae45734f688e324fba1b14bb9d7c1cd28bb2b5f2673aaa850ba4953aa57",
-  "fetched_at": "2026-10-25T01:14:00Z",
-  "dev_head": "452dc52fc3366c24953f33db6c384fc72956fd26"
+  "api_sha256": "22c5479a214f1e85349e6a66b9b23ab88f317ca4e14d4ad0c7c23763e1d844be",
+  "fetched_at": "2026-10-25T06:57:42Z",
+  "dev_head": "0150a8bc8c92b6eb7c9ffafa46e360a4793daeb7"
  },
  "rows": {
-  "litellm": 4305,
-  "with_input": 3439,
-  "with_output": 3012,
-  "with_context": 715,
-  "fills": 1440,
+  "litellm": 4306,
+  "with_input": 3440,
+  "with_output": 3013,
+  "with_context": 716,
+  "fills": 1463,
   "providers": 174
  },
  "field_fills": {
   "input": 2,
   "output": 45
  },
- "dropped_padding": 298,
+ "dropped_padding": 329,
  "skipped_models_dev": 0,
  "disagreements": 242,
  "coverage": {
-  "catalog": 2581,
-  "litellm_alone": 846,
-  "ctxlen": 2283,
-  "total_from_models_dev": 2159,
+  "catalog": 2605,
+  "litellm_alone": 847,
+  "ctxlen": 2307,
+  "total_from_models_dev": 2183,
   "total_from_litellm": 124,
   "total_none": 298
  },
  "gate": {
   "previous": {
-   "rows": 4259,
+   "rows": 4305,
    "fills": 1440,
    "providers": 174
   },
   "shrink_limit": 0.25
  },
- "version": "2026.10.25.1",
+ "version": "2026.10.25.2",
  "e4": {
-  "wheel_bytes": 60120,
+  "wheel_bytes": 60334,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 5.896835000001488,
-    "first_lookup_ms": 49.19960600000195,
-    "slowest_later_ms": 0.10146600000382477,
+    "import_ms": 6.163407000002508,
+    "first_lookup_ms": 51.723859999981414,
+    "slowest_later_ms": 0.14009000000214655,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 181.67302900000948,
+    "default_lookup_ms": 183.8231119999989,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 12.707620000000475,
-    "first_lookup_ms": 77.02245699999821,
-    "slowest_later_ms": 0.1310569999901645,
+    "import_ms": 13.161080000003267,
+    "first_lookup_ms": 71.63904500001195,
+    "slowest_later_ms": 0.1751659999911226,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 485.2727940000108,
+    "default_lookup_ms": 319.3496510000102,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
