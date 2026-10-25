@@ -12,6 +12,7 @@ from typing import NamedTuple
 
 MAIN_REF = "refs/heads/main"
 FAULTS = ("none", "force", "shrink", "refuse", "alarm")
+BROKEN_RESULTS = ("failure", "cancelled")
 LITELLM_COOLDOWN = timedelta(days=3)
 RELEASE_LABEL = "ctxlen-release"
 CONFORMANCE_LABEL = "ctxlen-conformance"
@@ -154,16 +155,23 @@ def watchdog_verdict(
     `delivered` says whether PyPI's latest release carries this run's content (None: there is
     nothing to check), and `reason` is why build failed. A body names the problem only, never
     the run, so it stays the same while the problem does.
+
+    A timeout cancels a job. Conformance never pings: it has its own issue. Off main only the
+    alarm fault pings, because the live tier makes jobs fail on purpose.
     """
     issues = []
     failed = [
-        job for job in ("build", "publish", "record") if results.get(job) == "failure"
+        job
+        for job in ("build", "publish", "record")
+        if results.get(job) in BROKEN_RESULTS
     ]
-    if failed or delivered is False:
+    broken = bool(failed) or delivered is False
+    if broken:
         lines = [f"The release on `{ref}` did not deliver."]
         for job in failed:
             cause = f": {reason}" if job == "build" and reason else ""
-            lines.append(f"- the {job} job failed{cause}")
+            outcome = f"failed{cause}" if results[job] == "failure" else "was cancelled"
+            lines.append(f"- the {job} job {outcome}")
         if delivered is False:
             lines.append("- PyPI's latest release does not carry this run's content")
         issues.append(
@@ -176,9 +184,9 @@ def watchdog_verdict(
         issues.append(
             (CONFORMANCE_LABEL, "ctxlen and litellm find different rows", body)
         )
-    if fault == "alarm":
+    if fault == "alarm" or (ref == MAIN_REF and broken):
         ping = "fail"
-    elif ref == MAIN_REF and delivered and not failed:
+    elif ref == MAIN_REF and delivered:
         ping = "success"
     else:
         ping = None

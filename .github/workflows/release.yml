@@ -189,8 +189,14 @@ jobs:
           git add src/ctxlen/_data.json reports
           git diff --cached --quiet || git commit -m "Release $VERSION"
           git tag "v$VERSION"
-          if [ "$GITHUB_REF" = refs/heads/main ]; then git push origin HEAD:main; fi
-          git push origin "v$VERSION"
+          main=()
+          if [ "$GITHUB_REF" = refs/heads/main ]; then main=(HEAD:main); fi
+          # One atomic push, so main never gets the release commit without its tag.
+          for wait in 5 10 0; do
+            git push --atomic origin "${main[@]}" "v$VERSION" && exit 0
+            sleep "$wait"
+          done
+          exit 1
 
   watchdog:
     needs: [build, conformance, publish, record]
