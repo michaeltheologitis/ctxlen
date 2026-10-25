@@ -154,6 +154,10 @@ def watchdog_verdict(
     `delivered` says whether PyPI's latest release carries this run's content (None: there is
     nothing to check), and `reason` is why build failed. A body names the problem only, never
     the run, so it stays the same while the problem does.
+
+    On main it pings fail when a job failed or was cancelled (a timeout cancels a job) or the
+    content was not delivered, and success when it was. Other refs ping only for the alarm
+    fault: the live tier makes their jobs fail on purpose.
     """
     issues = []
     failed = [
@@ -176,9 +180,10 @@ def watchdog_verdict(
         issues.append(
             (CONFORMANCE_LABEL, "ctxlen and litellm find different rows", body)
         )
-    if fault == "alarm":
+    unfinished = any(result in ("failure", "cancelled") for result in results.values())
+    if fault == "alarm" or (ref == MAIN_REF and (unfinished or delivered is False)):
         ping = "fail"
-    elif ref == MAIN_REF and delivered and not failed:
+    elif ref == MAIN_REF and delivered:
         ping = "success"
     else:
         ping = None

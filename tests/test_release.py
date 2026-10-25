@@ -25,6 +25,14 @@ TASK_REF = "refs/heads/claude/hopeful-brown-gw7aqa"
 DAY = date(2026, 10, 11)
 EVENTS = ("push", "pull_request", "schedule", "workflow_dispatch")
 ALL_GREEN = dict.fromkeys(("build", "conformance", "publish", "record"), "success")
+BROKEN_RUNS = [
+    ({**ALL_GREEN, "build": "failure"}, None),
+    ({**ALL_GREEN, "conformance": "failure"}, True),
+    ({**ALL_GREEN, "publish": "failure", "record": "skipped"}, True),
+    ({**ALL_GREEN, "record": "failure"}, True),
+    ({**ALL_GREEN, "record": "cancelled"}, True),
+    (ALL_GREEN, False),
+]
 
 
 def plan(
@@ -205,20 +213,27 @@ def test_latest_litellm_release_waits_three_days_and_skips_prereleases_and_yanke
 
 def test_watchdog_pings_success_only_on_main_when_delivered():
     assert watchdog_verdict(MAIN_REF, "none", ALL_GREEN, True, 0, "").ping == "success"
-    assert watchdog_verdict(MAIN_REF, "none", ALL_GREEN, False, 0, "").ping is None
+    assert watchdog_verdict(MAIN_REF, "none", ALL_GREEN, True, 3, "").ping == "success"
     assert watchdog_verdict(TASK_REF, "none", ALL_GREEN, True, 0, "").ping is None
 
 
-def test_watchdog_sends_fail_only_for_the_alarm_fault():
+@pytest.mark.parametrize("results, delivered", BROKEN_RUNS)
+def test_watchdog_pings_fail_on_main_for_a_failed_job_or_undelivered_content(
+    results, delivered
+):
+    assert watchdog_verdict(MAIN_REF, "none", results, delivered, 0, "").ping == "fail"
+
+
+@pytest.mark.parametrize("results, delivered", BROKEN_RUNS)
+@pytest.mark.parametrize("fault", [f for f in FAULTS if f != "alarm"])
+def test_watchdog_never_pings_off_main_without_the_alarm_fault(
+    fault, results, delivered
+):
+    assert watchdog_verdict(TASK_REF, fault, results, delivered, 0, "").ping is None
+
+
+def test_watchdog_pings_fail_for_the_alarm_fault():
     assert watchdog_verdict(TASK_REF, "alarm", ALL_GREEN, True, 0, "").ping == "fail"
-    for fault in ("none", "force", "shrink", "refuse"):
-        assert watchdog_verdict(TASK_REF, fault, ALL_GREEN, True, 0, "").ping != "fail"
-
-
-def test_watchdog_never_pings_success_after_a_failed_publish():
-    results = {**ALL_GREEN, "publish": "failure", "record": "skipped"}
-    for ref in (MAIN_REF, TASK_REF):
-        assert watchdog_verdict(ref, "none", results, True, 0, "").ping is None
 
 
 @pytest.mark.parametrize(
@@ -255,4 +270,3 @@ def test_watchdog_opens_no_issue_when_all_is_well():
 def test_watchdog_opens_the_conformance_issue_for_differences(results, differences):
     verdict = watchdog_verdict(MAIN_REF, "none", results, True, differences, "")
     assert [label for label, _, _ in verdict.issues] == [CONFORMANCE_LABEL]
-    assert verdict.ping == "success"
