@@ -27,7 +27,6 @@ EVENTS = ("push", "pull_request", "schedule", "workflow_dispatch")
 ALL_GREEN = dict.fromkeys(("build", "conformance", "publish", "record"), "success")
 BROKEN_RUNS = [
     ({**ALL_GREEN, "build": "failure"}, None),
-    ({**ALL_GREEN, "conformance": "failure"}, True),
     ({**ALL_GREEN, "publish": "failure", "record": "skipped"}, True),
     ({**ALL_GREEN, "record": "failure"}, True),
     ({**ALL_GREEN, "record": "cancelled"}, True),
@@ -213,7 +212,7 @@ def test_latest_litellm_release_waits_three_days_and_skips_prereleases_and_yanke
 
 def test_watchdog_pings_success_only_on_main_when_delivered():
     assert watchdog_verdict(MAIN_REF, "none", ALL_GREEN, True, 0, "").ping == "success"
-    assert watchdog_verdict(MAIN_REF, "none", ALL_GREEN, True, 3, "").ping == "success"
+    assert watchdog_verdict(MAIN_REF, "none", ALL_GREEN, None, 0, "").ping is None
     assert watchdog_verdict(TASK_REF, "none", ALL_GREEN, True, 0, "").ping is None
 
 
@@ -246,17 +245,19 @@ def test_watchdog_pings_fail_for_the_alarm_fault():
             "gate: rows shrank",
         ),
         ({**ALL_GREEN, "publish": "failure"}, True, "", "publish"),
-        ({**ALL_GREEN, "record": "failure"}, True, "", "record"),
+        ({**ALL_GREEN, "record": "failure"}, True, "", "record job failed"),
+        ({**ALL_GREEN, "record": "cancelled"}, True, "", "record job was cancelled"),
         (ALL_GREEN, False, "", "PyPI"),
     ],
 )
+@pytest.mark.parametrize("ref", [MAIN_REF, TASK_REF])
 def test_watchdog_opens_the_release_issue_for_a_failed_job_or_undelivered_content(
-    results, delivered, reason, named
+    ref, results, delivered, reason, named
 ):
-    verdict = watchdog_verdict(TASK_REF, "none", results, delivered, 0, reason)
+    verdict = watchdog_verdict(ref, "none", results, delivered, 0, reason)
     [(label, _, body)] = verdict.issues
     assert label == RELEASE_LABEL
-    assert named in body and TASK_REF in body
+    assert named in body and ref in body
 
 
 def test_watchdog_opens_no_issue_when_all_is_well():
@@ -270,3 +271,4 @@ def test_watchdog_opens_no_issue_when_all_is_well():
 def test_watchdog_opens_the_conformance_issue_for_differences(results, differences):
     verdict = watchdog_verdict(MAIN_REF, "none", results, True, differences, "")
     assert [label for label, _, _ in verdict.issues] == [CONFORMANCE_LABEL]
+    assert verdict.ping == "success"

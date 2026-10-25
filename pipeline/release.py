@@ -155,19 +155,23 @@ def watchdog_verdict(
     nothing to check), and `reason` is why build failed. A body names the problem only, never
     the run, so it stays the same while the problem does.
 
-    On main it pings fail when a job failed or was cancelled (a timeout cancels a job) or the
-    content was not delivered, and success when it was. Other refs ping only for the alarm
-    fault: the live tier makes their jobs fail on purpose.
+    On main it pings fail when build, publish or record failed or was cancelled (a timeout
+    cancels a job), or the content was not delivered, and success when it was delivered.
+    Conformance never pings: it has its own issue. Other refs ping only for the alarm fault:
+    the live tier makes their jobs fail on purpose.
     """
     issues = []
     failed = [
-        job for job in ("build", "publish", "record") if results.get(job) == "failure"
+        job
+        for job in ("build", "publish", "record")
+        if results.get(job) in ("failure", "cancelled")
     ]
     if failed or delivered is False:
         lines = [f"The release on `{ref}` did not deliver."]
         for job in failed:
             cause = f": {reason}" if job == "build" and reason else ""
-            lines.append(f"- the {job} job failed{cause}")
+            outcome = f"failed{cause}" if results[job] == "failure" else "was cancelled"
+            lines.append(f"- the {job} job {outcome}")
         if delivered is False:
             lines.append("- PyPI's latest release does not carry this run's content")
         issues.append(
@@ -180,8 +184,7 @@ def watchdog_verdict(
         issues.append(
             (CONFORMANCE_LABEL, "ctxlen and litellm find different rows", body)
         )
-    unfinished = any(result in ("failure", "cancelled") for result in results.values())
-    if fault == "alarm" or (ref == MAIN_REF and (unfinished or delivered is False)):
+    if fault == "alarm" or (ref == MAIN_REF and (failed or delivered is False)):
         ping = "fail"
     elif ref == MAIN_REF and delivered:
         ping = "success"
