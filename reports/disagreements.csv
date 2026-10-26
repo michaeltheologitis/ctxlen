@@ -135,7 +135,10 @@ mistral/codestral-latest,max_input,128000,256000,mistral/codestral-latest
 mistral/codestral-latest,max_output,128000,4096,mistral/codestral-latest
 mistral/ministral-8b-latest,max_output,262144,128000,mistral/ministral-8b-latest
 mistral/mistral-embed,context,8192,8000,mistral/mistral-embed
-morph/morph-v3-large,max_input,16000,32000,morph/morph-v3-large
+morph/morph-v3-fast,max_input,16000,262144,morph/morph-v3-fast
+morph/morph-v3-fast,max_output,16000,131072,morph/morph-v3-fast
+morph/morph-v3-large,max_input,16000,262144,morph/morph-v3-large
+morph/morph-v3-large,max_output,16000,131072,morph/morph-v3-large
 nebius/NousResearch/Hermes-4-405B,max_input,131072,120000,nebius/NousResearch/Hermes-4-405B
 nebius/NousResearch/Hermes-4-405B,max_output,131072,8192,nebius/NousResearch/Hermes-4-405B
 nebius/Qwen/Qwen3-235B-A22B-Instruct-2507,max_output,262144,8192,nebius/Qwen/Qwen3-235B-A22B-Instruct-2507
