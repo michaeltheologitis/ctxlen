@@ -136,12 +136,6 @@ gemini/lyria-3-clip-preview,max_output,8192,65536,google/lyria-3-clip-preview
 gemini/lyria-3-pro-preview,max_input,131072,1048576,google/lyria-3-pro-preview
 gemini/lyria-3-pro-preview,max_output,8192,65536,google/lyria-3-pro-preview
 global.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/global.anthropic.claude-sonnet-4-6
-global.openai.gpt-5.6-luna,max_input,1050000,922000,amazon-bedrock/global.openai.gpt-5.6-luna
-global.openai.gpt-5.6-sol,max_input,1050000,922000,amazon-bedrock/global.openai.gpt-5.6-sol
-global.openai.gpt-5.6-terra,max_input,1050000,922000,amazon-bedrock/global.openai.gpt-5.6-terra
-global.openai.gpt-6-astra,max_input,1050000,922000,amazon-bedrock/global.openai.gpt-6-astra
-global.openai.gpt-6-luna,max_input,1050000,922000,amazon-bedrock/global.openai.gpt-6-luna
-global.openai.gpt-6-sol,max_input,1050000,922000,amazon-bedrock/global.openai.gpt-6-sol
 global.openai.gpt-6.1-sol,max_input,1000000,922000,amazon-bedrock/global.openai.gpt-6.1-sol
 global.xai.grok-4.7,context,524288,500000,amazon-bedrock/global.xai.grok-4.7
 gpt-5-pro,max_input,400000,272000,openai/gpt-5-pro
@@ -198,8 +192,6 @@ oci/openai.gpt-oss-120b,max_output,128000,16384,oci/openai.gpt-oss-120b
 oci/openai.gpt-oss-20b,max_output,128000,16384,oci/openai.gpt-oss-20b
 oci/xai.grok-4.20-non-reasoning,max_output,1000000,30000,oci/xai.grok-4.20-non-reasoning
 oci/xai.grok-4.20-reasoning,max_output,1000000,30000,oci/xai.grok-4.20-reasoning
-openai.gpt-6-luna,max_input,1050000,922000,amazon-bedrock/openai.gpt-6-luna
-openai.gpt-6-sol,max_input,1050000,922000,amazon-bedrock/openai.gpt-6-sol
 openai.gpt-oss-120b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-120b-1:0
 openai.gpt-oss-20b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-20b-1:0
 ovhcloud/Mistral-Nemo-Instruct-2407,context,118000,65536,ovhcloud/mistral-nemo-instruct-2407
@@ -244,12 +236,6 @@ together_ai/zai-org/GLM-5.3,max_output,128000,262144,togetherai/zai-org/GLM-5.3
 together_ai/zai-org/GLM-5.3-Flash,max_output,128000,400000,togetherai/zai-org/GLM-5.3-Flash
 us.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/us.anthropic.claude-sonnet-4-6
 us.mistral.pixtral-large-2502-v1:0,max_output,16384,8192,amazon-bedrock/us.mistral.pixtral-large-2502-v1:0
-us.openai.gpt-5.6-luna,max_input,1050000,922000,amazon-bedrock/us.openai.gpt-5.6-luna
-us.openai.gpt-5.6-sol,max_input,1050000,922000,amazon-bedrock/us.openai.gpt-5.6-sol
-us.openai.gpt-5.6-terra,max_input,1050000,922000,amazon-bedrock/us.openai.gpt-5.6-terra
-us.openai.gpt-6-astra,max_input,1050000,922000,amazon-bedrock/us.openai.gpt-6-astra
-us.openai.gpt-6-luna,max_input,1050000,922000,amazon-bedrock/us.openai.gpt-6-luna
-us.openai.gpt-6-sol,max_input,1050000,922000,amazon-bedrock/us.openai.gpt-6-sol
 us.openai.gpt-6.1-sol,max_input,1000000,922000,amazon-bedrock/us.openai.gpt-6.1-sol
 us.xai.grok-4.7,context,524288,500000,amazon-bedrock/us.xai.grok-4.7
 vertex_ai/claude-sonnet-4-6,max_output,64000,128000,google-vertex-anthropic/claude-sonnet-4-6@default
