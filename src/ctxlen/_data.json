@@ -5594,7 +5594,7 @@
 "nano-gpt/openai/gpt-luna-latest":["nano-gpt",1050000,128000,1050000],
 "nano-gpt/openai/gpt-oss-120b":["nano-gpt",128000,16384,128000],
 "nano-gpt/openai/gpt-oss-20b":["nano-gpt",131072,16384,131072],
-"nano-gpt/openai/gpt-oss-safeguard-20b":["nano-gpt",128000,16384,128000],
+"nano-gpt/openai/gpt-oss-safeguard-20b":["nano-gpt",131072,65536,131072],
 "nano-gpt/openai/gpt-sol-latest":["nano-gpt",1050000,128000,1050000],
 "nano-gpt/openai/gpt-terra-latest":["nano-gpt",1050000,128000,1050000],
 "nano-gpt/openai/o1":["nano-gpt",200000,100000,200000],

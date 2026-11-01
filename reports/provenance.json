@@ -1,14 +1,14 @@
 {
- "built_at": "2026-11-01T00:54:54Z",
+ "built_at": "2026-11-01T12:45:56Z",
  "litellm": {
-  "commit": "a1c5829f6b7664135974e902bdee2419c53ef825",
+  "commit": "60fc121ce8ab995cb2997e0bbd0a980ee93c627d",
   "json_sha256": "7f7f1567bee2b7ba4118e4b9b3c1de70b122fd9164f69d9adfc12aca1033101a",
   "release": "1.106.6"
  },
  "models_dev": {
-  "api_sha256": "9bffc39ab662d1f6eaa489a89273177be40ee37829ded58e702b3db97a4f8a8e",
-  "fetched_at": "2026-11-01T00:54:52Z",
-  "dev_head": "ff580033fa6edadafb54a3cee253a94aa7ca709e"
+  "api_sha256": "56f1ae01f80309b629b56181e52512f306a0dd3700600b3afe06c7638c718098",
+  "fetched_at": "2026-11-01T12:45:53Z",
+  "dev_head": "98fc45d70a4ed71e3db796017d62670033d217ae"
  },
  "rows": {
   "litellm": 4551,
@@ -41,9 +41,9 @@
   },
   "shrink_limit": 0.25
  },
- "version": "2026.11.1.1",
+ "version": "2026.11.1.2",
  "e4": {
-  "wheel_bytes": 62191,
+  "wheel_bytes": 62189,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 5.590302000001657,
-    "first_lookup_ms": 47.514475999996364,
-    "slowest_later_ms": 0.08519800000073019,
+    "import_ms": 5.731572000001961,
+    "first_lookup_ms": 38.21516600000052,
+    "slowest_later_ms": 0.06619999999912807,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 170.4315949999966,
+    "default_lookup_ms": 122.94603500000534,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 11.243968999998799,
-    "first_lookup_ms": 62.47683299999807,
-    "slowest_later_ms": 0.10868300000055342,
+    "import_ms": 8.444365999999093,
+    "first_lookup_ms": 45.528680000003874,
+    "slowest_later_ms": 0.07568499999877076,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 282.81686000000406,
+    "default_lookup_ms": 202.73266400000267,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
