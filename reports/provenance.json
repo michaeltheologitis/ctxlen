@@ -1,21 +1,21 @@
 {
- "built_at": "2026-11-02T06:50:44Z",
+ "built_at": "2026-11-02T12:45:14Z",
  "litellm": {
-  "commit": "ff3983c1f627ad09a5e36e45cc92a0cec91afb72",
+  "commit": "572832dea1fce147665d7a3a7e6d704a086f372c",
   "json_sha256": "8f8060d8ce7a40c91b995c74d6a27657543d49e3c1c53430dabd556f244392c6",
   "release": "1.106.6"
  },
  "models_dev": {
-  "api_sha256": "195a33d1726eca8f57c67891df252f4fcedb201cde8ddd4512c6d5fffbd7cc49",
-  "fetched_at": "2026-11-02T06:50:42Z",
-  "dev_head": "b13cc7d081ac63daa39d873456d21a2bb99a119d"
+  "api_sha256": "49a127ea0806f75709ee7c4774b4a167f162d45d50d57034c7272ddbb166924b",
+  "fetched_at": "2026-11-02T12:45:12Z",
+  "dev_head": "2627e52a40d0491ffc1c1814b2ee11cf61fc9f58"
  },
  "rows": {
   "litellm": 4551,
   "with_input": 3669,
   "with_output": 3411,
   "with_context": 734,
-  "fills": 1445,
+  "fills": 1440,
   "providers": 174
  },
  "field_fills": {
@@ -26,24 +26,24 @@
  "skipped_models_dev": 0,
  "disagreements": 278,
  "coverage": {
-  "catalog": 2613,
+  "catalog": 2608,
   "litellm_alone": 868,
-  "ctxlen": 2310,
-  "total_from_models_dev": 2182,
+  "ctxlen": 2305,
+  "total_from_models_dev": 2177,
   "total_from_litellm": 128,
   "total_none": 303
  },
  "gate": {
   "previous": {
    "rows": 4551,
-   "fills": 1448,
+   "fills": 1445,
    "providers": 174
   },
   "shrink_limit": 0.25
  },
- "version": "2026.11.2.1",
+ "version": "2026.11.2.2",
  "e4": {
-  "wheel_bytes": 62146,
+  "wheel_bytes": 62124,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 4.284791000003452,
-    "first_lookup_ms": 35.26674799999796,
-    "slowest_later_ms": 0.06807299999422867,
+    "import_ms": 7.248055999994563,
+    "first_lookup_ms": 57.441979000003585,
+    "slowest_later_ms": 0.10645899999417452,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 126.75253800000519,
+    "default_lookup_ms": 191.5046089999919,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 9.144953000003397,
-    "first_lookup_ms": 49.66865999998049,
-    "slowest_later_ms": 0.09106699999961165,
+    "import_ms": 13.805709999999749,
+    "first_lookup_ms": 77.27407299999811,
+    "slowest_later_ms": 0.18002599999533686,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 221.6530359999922,
+    "default_lookup_ms": 333.9062440000049,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
