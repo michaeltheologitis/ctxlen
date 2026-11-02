@@ -256,6 +256,7 @@ vertex_ai/mistral-small-2503,max_output,128000,16384,google-vertex/mistral-small
 vertex_ai/xai/grok-4.20-non-reasoning,max_output,2000000,30000,google-vertex/xai/grok-4.20-non-reasoning
 vertex_ai/xai/grok-4.20-reasoning,max_output,2000000,30000,google-vertex/xai/grok-4.20-reasoning
 vertex_ai/xai/grok-4.3,max_output,200000,30000,google-vertex/xai/grok-4.3
+wandb/deepseek-ai/DeepSeek-V3.1,max_input,128000,161000,wandb/deepseek-ai/DeepSeek-V3.1
 wandb/deepseek-ai/DeepSeek-V4-Pro-0813,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4-Pro-0813
 wandb/deepseek-ai/DeepSeek-V4.1-Flash,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4.1-Flash
 wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B,context,1049000,1048576,wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
