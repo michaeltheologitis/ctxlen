@@ -105,7 +105,6 @@ deepinfra/zai-org/GLM-4.7,max_output,202752,16384,deepinfra/zai-org/GLM-4.7
 deepinfra/zai-org/GLM-5.2,max_output,1048576,32768,deepinfra/zai-org/GLM-5.2
 deepseek.v3.2,max_input,156000,163840,amazon-bedrock/deepseek.v3.2
 deepseek.v3.2,max_output,8000,81920,amazon-bedrock/deepseek.v3.2
-empiriolabs/qwen3-7-flash,context,991808,983616,empiriolabs/qwen3-7-flash
 eu.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/eu.anthropic.claude-sonnet-4-6
 eu.mistral.pixtral-large-2502-v1:0,max_output,16384,8192,amazon-bedrock/eu.mistral.pixtral-large-2502-v1:0
 fireworks_ai/accounts/fireworks/models/deepseek-v4p1-flash,context,1048576,1000000,fireworks-ai/accounts/fireworks/models/deepseek-v4p1-flash
@@ -141,12 +140,16 @@ gemini/lyria-3-pro-preview,max_output,8192,65536,google/lyria-3-pro-preview
 global.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/global.anthropic.claude-sonnet-4-6
 global.openai.gpt-6.1-sol,max_input,1000000,922000,amazon-bedrock/global.openai.gpt-6.1-sol
 global.xai.grok-4.7,context,524288,500000,amazon-bedrock/global.xai.grok-4.7
+gmi/Qwen/Qwen3.7-Max,max_input,262144,1000000,gmicloud/Qwen/Qwen3.7-Max
+gmi/moonshotai/Kimi-K2.6,context,262144,65536,gmicloud/moonshotai/Kimi-K2.6
+gmi/moonshotai/Kimi-K2.6,max_input,262144,65536,gmicloud/moonshotai/Kimi-K2.6
+gmi/openai/gpt-5.5,max_input,1050000,922000,gmicloud/openai/gpt-5.5
+gmi/zai-org/GLM-5.2-FP8,context,1048576,1000000,gmicloud/zai-org/GLM-5.2-FP8
 gpt-5-pro,max_input,400000,272000,openai/gpt-5-pro
 gpt-5.4,max_input,1050000,922000,openai/gpt-5.4
 gpt-5.4-pro,max_input,1050000,922000,openai/gpt-5.4-pro
 gpt-5.5,max_input,1050000,922000,openai/gpt-5.5
 gpt-5.5-pro,max_input,1050000,922000,openai/gpt-5.5-pro
-gpt-daybreak-red-latest,max_input,400000,272000,openai/gpt-daybreak-red-latest
 gpt-realtime-2.1,max_input,128000,96000,openai/gpt-realtime-2.1
 helicone/gpt-5-chat-latest,context,272000,128000,helicone/gpt-5-chat-latest
 helicone/gpt-5-pro,context,272000,128000,helicone/gpt-5-pro
