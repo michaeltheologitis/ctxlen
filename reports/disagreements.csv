@@ -45,6 +45,8 @@ azure_ai/mistral-small-2503,max_output,128000,32768,azure-cognitive-services/mis
 azure_ai/model-router,max_output,32768,16384,azure-cognitive-services/model-router
 baseten/deepseek-ai/DeepSeek-V4.1-Flash,max_output,262144,32768,baseten/deepseek-ai/DeepSeek-V4.1-Flash
 baseten/deepseek-ai/DeepSeek-V4.1-Flash-Fast,max_output,131072,32768,baseten/deepseek-ai/DeepSeek-V4.1-Flash-Fast
+baseten/moonshotai/Kimi-K3.1-Pro,context,1048576,1000000,baseten/moonshotai/Kimi-K3.1-Pro
+baseten/moonshotai/Kimi-K3.1-Pro,max_output,1048576,262144,baseten/moonshotai/Kimi-K3.1-Pro
 cerebras/gpt-oss-120b,max_output,32768,40960,cerebras/gpt-oss-120b
 cerebras/qwen-3.8-27b,max_input,65536,131072,cerebras/qwen-3.8-27b
 cerebras/qwen-3.8-27b,max_output,32768,40960,cerebras/qwen-3.8-27b
@@ -233,6 +235,7 @@ snowflake/openai-gpt-5-mini,max_output,16384,8192,snowflake-cortex/openai-gpt-5-
 snowflake/openai-gpt-5-nano,context,5000000,272000,snowflake-cortex/openai-gpt-5-nano
 snowflake/openai-gpt-5-nano,max_input,5000000,272000,snowflake-cortex/openai-gpt-5-nano
 snowflake/openai-gpt-5-nano,max_output,16384,8192,snowflake-cortex/openai-gpt-5-nano
+tencent/hy4-preview,max_input,960000,1024000,tencent-tokenhub/hy4-preview
 together_ai/Qwen/Qwen3.5-9B,max_output,262144,65536,togetherai/Qwen/Qwen3.5-9B
 together_ai/Qwen/Qwen3.6-Plus,max_output,1000000,65536,togetherai/Qwen/Qwen3.6-Plus
 together_ai/Qwen/Qwen3.7-Max,max_output,1000000,131072,togetherai/Qwen/Qwen3.7-Max
@@ -268,6 +271,7 @@ vertex_ai/xai/grok-4.3,max_output,200000,30000,google-vertex/xai/grok-4.3
 wandb/deepseek-ai/DeepSeek-V3.1,max_input,128000,161000,wandb/deepseek-ai/DeepSeek-V3.1
 wandb/deepseek-ai/DeepSeek-V4-Pro-0813,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4-Pro-0813
 wandb/deepseek-ai/DeepSeek-V4.1-Flash,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4.1-Flash
+wandb/deepseek-ai/DeepSeek-V4.1-Flash-1017,context,1049000,1048576,wandb/deepseek-ai/DeepSeek-V4.1-Flash-1017
 wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B,context,1049000,1048576,wandb/nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B
 wandb/reflection/Beam-1.0-501B-A23B,context,1049000,1048576,wandb/reflection/Beam-1.0-501B-A23B
 wandb/zai-org/GLM-5.2,max_input,262000,1048576,wandb/zai-org/GLM-5.2
