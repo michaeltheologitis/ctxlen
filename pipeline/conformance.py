@@ -98,6 +98,10 @@ DRIFT_CHECKS = {
         "accounts/",
         m.llms.fireworks_ai.common_utils.AZURE_FOUNDRY_FIREWORKS_MODEL_ID_PREFIX,
     ),
+    "SCALEDOWN_MODELS": lambda m: (
+        m.llms.scaledown.chat.transformation.DOMAIN_MODELS
+        | m.llms.scaledown.chat.transformation.DECISIONS_MODELS
+    ),
 }
 GROUPS = ("key", "prefixed", "catalog", "variant", "non_model")
 # What litellm_key answers for an id E1 does not compare, and the exclusion it counts in.
@@ -296,6 +300,7 @@ def main(argv: list[str] | None = None) -> int:
     import litellm.constants
     import litellm.llms.bedrock.common_utils
     import litellm.llms.fireworks_ai.common_utils
+    import litellm.llms.scaledown.chat.transformation
 
     litellm.suppress_debug_info = True
     mismatches = check_loaded(litellm.model_cost, cost_map)
