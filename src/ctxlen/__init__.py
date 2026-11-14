@@ -14,9 +14,12 @@ def ctxlen(model: str, *, live: bool = True) -> _typing.Optional[int]:  # noqa: 
     `model` is any id you would pass to litellm.completion ("gpt-4o",
     "anthropic/claude-sonnet-4-5", "bedrock/us.anthropic..."), resolved as
     litellm resolves it. The number is models.dev's for the same provider's
-    model; where models.dev has none, or one below this model's limits, it is
-    max_input(model), raised to max_output(model) where that is larger,
-    which is never larger than the true total.
+    model. Where models.dev has none, one below either limit, or one more
+    than 5% above what litellm's own limits allow (their sum, or max_input
+    alone where litellm sets max_output equal to it, its way of saying the
+    reply can fill the window), it is max_input(model), raised to
+    max_output(model) where that is larger, which is never larger than the
+    true total.
 
     With live=True, the default, the numbers are the latest release's, fetched
     from GitHub at most once an hour and cached in ~/.cache/ctxlen/. Offline,

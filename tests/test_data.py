@@ -165,6 +165,25 @@ def test_an_alias_answers_its_targets_numbers_fills_included():
     assert answers("openai/gpt-astra-latest", shipped) == (922000, 128000, 1050000)
 
 
+def test_an_alias_gets_its_targets_row_after_the_window_rule():
+    cost_map = {
+        "mistral/codestral-2508": litellm_row("mistral", 128000, 128000),
+        "mistral/codestral-latest": {"alias_of": "mistral/codestral-2508"},
+    }
+    projected = project_litellm(expand_aliases(cost_map), ["mistral"], {})
+    fill = entry("mistral/codestral-latest", context=256000)
+    merged, disagreements, _ = attach_fills(projected, [fill], alias_targets(cost_map))
+    assert merged["rows"]["mistral/codestral-latest"] == [
+        "mistral",
+        128000,
+        128000,
+        None,
+    ]
+    assert disagreements == [
+        Disagreement("mistral/codestral-2508", "context", 128000, 256000, fill.source)
+    ]
+
+
 def test_a_models_dev_entry_for_an_alias_fills_its_target():
     cost_map = {
         "gpt-6-astra": litellm_row("openai", 922000),
@@ -339,6 +358,118 @@ def test_a_context_below_the_rows_own_limits_is_dropped_and_reported():
         Disagreement("gpt-4.1", "context", 1047576, 1000000, "openai/gpt-4.1"),
         Disagreement("zai/glm-9", "context", 300000, 200000, "zai/glm-9"),
     ]
+
+
+@pytest.mark.parametrize(
+    "model, models_dev_context, total, disagreement",
+    [
+        (
+            "mistral/codestral-latest",
+            256000,
+            128000,
+            Disagreement(
+                "mistral/codestral-latest",
+                "context",
+                128000,
+                256000,
+                "mistral/codestral-latest",
+            ),
+        ),
+        (
+            "azure_ai/Phi-4",
+            128000,
+            16384,
+            Disagreement("azure_ai/Phi-4", "context", 16384, 128000, "azure_ai/Phi-4"),
+        ),
+        (
+            "anthropic/claude-sonnet-4-5",
+            1000000,
+            200000,
+            Disagreement(
+                "claude-sonnet-4-5",
+                "context",
+                264000,
+                1000000,
+                "anthropic/claude-sonnet-4-5",
+            ),
+        ),
+    ],
+)
+def test_a_window_over_the_ceiling_is_dropped_and_reported(
+    model, models_dev_context, total, disagreement, monkeypatch
+):
+    merged, disagreements, _ = attach_fills(
+        FIXTURE, [entry(model, context=models_dev_context)]
+    )
+    assert disagreements == [disagreement]
+    monkeypatch.setattr(_resolve, "shipped_index", lambda: build_index(merged))
+    assert _resolve.limits(model, "ctxlen")[2] == total
+
+
+@pytest.mark.parametrize(
+    "model, models_dev_context",
+    [
+        ("openai/gpt-6-sol", 1050000),
+        ("openai/gpt-5-pro", 400000),
+        ("perplexity/sonar", 200000),
+    ],
+)
+def test_a_window_the_limits_allow_is_models_devs(
+    model, models_dev_context, monkeypatch
+):
+    merged, disagreements, _ = attach_fills(
+        FIXTURE, [entry(model, context=models_dev_context)]
+    )
+    assert disagreements == []
+    monkeypatch.setattr(_resolve, "shipped_index", lambda: build_index(merged))
+    assert _resolve.limits(model, "ctxlen")[2] == models_dev_context
+
+
+@pytest.mark.parametrize(
+    "models_dev_context, context, disagreements",
+    [
+        (400000, 400000, []),
+        (
+            420000,
+            None,
+            [Disagreement("gpt-5", "context", 392000, 420000, "openai/gpt-5")],
+        ),
+    ],
+)
+def test_a_window_at_most_five_percent_over_the_ceiling_is_kept(
+    models_dev_context, context, disagreements
+):
+    rows = {**FIXTURE["rows"], "gpt-5": ["openai", 272000, 120000, None]}
+    fill = entry("openai/gpt-5", context=models_dev_context)
+    merged, reported, _ = attach_fills({**FIXTURE, "rows": rows}, [fill])
+    assert merged["rows"]["gpt-5"][3] == context
+    assert reported == disagreements
+
+
+def test_a_rejected_window_leaves_the_row_to_a_later_entry():
+    model = "mistral/codestral-latest"
+    entries = [
+        entry(model, context=256000, source="a"),
+        entry(model, context=128000, source="b"),
+    ]
+    merged, disagreements, _ = attach_fills(FIXTURE, entries)
+    assert merged["rows"][model] == ["mistral", 128000, 128000, 128000]
+    assert disagreements == [Disagreement(model, "context", 128000, 256000, "a")]
+
+
+def test_a_fill_with_equal_limits_keeps_a_larger_window():
+    fill = entry("zai/glm-9", 128000, 128000, context=256000)
+    merged, disagreements, _ = attach_fills(FIXTURE, [fill])
+    assert merged["fills"]["zai/glm-9"] == ["zai", 128000, 128000, 256000]
+    assert disagreements == []
+
+
+def test_a_max_output_filled_from_models_dev_is_not_litellms_padding():
+    key = "together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo"
+    entries = [entry(key, max_output=131072), entry(key, context=262144)]
+    merged, disagreements, _ = attach_fills(FIXTURE, entries)
+    assert merged["rows"][key] == ["together_ai", 131072, 131072, 262144]
+    assert disagreements == []
 
 
 def test_first_entry_wins_for_a_field():

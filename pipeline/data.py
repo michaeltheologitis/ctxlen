@@ -274,11 +274,14 @@ def attach_fills(
     Each entry is resolved as ctxlen resolves an id, over litellm's rows only; a hit on an
     alias of `aliases` is a hit on its target. A hit on a row of the same family fills the
     row's missing fields and its context; where both have a number and they differ by more
-    than DISAGREEMENT_RATIO, litellm's stays and the pair is a disagreement. A hit on another
-    family adds nothing, so a host's number never lands on a lab's row. A miss becomes a fill
-    row. The first entry wins each field. Last, a context below its row's own limits is
-    dropped and reported, and each alias row becomes a copy of its target's. So a fill never
-    changes a number litellm gives.
+    than DISAGREEMENT_RATIO, litellm's stays and the pair is a disagreement. A hit on
+    another family adds nothing, so a host's number never lands on a lab's row. A miss
+    becomes a fill row. The first entry wins each field, except that a context more than
+    DISAGREEMENT_RATIO above what the litellm row's own limits allow (window_ceiling) is a
+    disagreement and leaves the context to a later entry. Last, a context below its row's
+    own limits is dropped and reported, and each alias row becomes a copy of its target's.
+    So a fill never changes a limit litellm gives, and never gives a litellm row a window
+    more than DISAGREEMENT_RATIO above what its limits allow.
     """
     aliases = aliases or {}
     litellm_only = build_index({**data, "fills": {}})
@@ -299,8 +302,14 @@ def attach_fills(
             continue
         row = rows[key]
         if entry.context is not None and row[3] is None:
-            row[3] = entry.context
-            context_source[key] = entry.source
+            ceiling = window_ceiling(litellm_row)
+            if ceiling and entry.context - ceiling > DISAGREEMENT_RATIO * ceiling:
+                disagreements.append(
+                    Disagreement(key, "context", ceiling, entry.context, entry.source)
+                )
+            else:
+                row[3] = entry.context
+                context_source[key] = entry.source
         for position, field in ((1, "max_input"), (2, "max_output")):
             value, theirs = getattr(entry, field), litellm_row[position]
             if value is None:
@@ -323,6 +332,18 @@ def attach_fills(
     disagreements.sort(key=lambda d: (d.key, d.field, d.source))
     merged = {**data, "rows": rows, "fills": dict(sorted(fills.items()))}
     return merged, disagreements, counts
+
+
+def window_ceiling(litellm_row: Sequence) -> int | None:
+    """The largest window a litellm row's own limits allow, or None with either one unknown.
+
+    That is max_input + max_output, or max_input alone where max_output equals it: litellm's
+    padding for a reply that can fill the window.
+    """
+    _, max_input, max_output, _ = litellm_row
+    if max_input is None or max_output is None:
+        return None
+    return max_input if max_input == max_output else max_input + max_output
 
 
 def check_gate(data: dict, previous: dict | None) -> None:
