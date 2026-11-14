@@ -147,7 +147,7 @@ def positive_int(value: object, where: str) -> int | None:
 def alias_targets(cost_map: dict) -> dict[str, str]:
     """Each alias row's key and its target's key: litellm main serves {"alias_of": target} as
     the target's row. DataError for an alias row with another field, or whose target is not a
-    model row; an alias of an alias is not one, as in litellm main."""
+    model row; a target that is itself an alias is refused, as in litellm main."""
     aliases = {
         key: value["alias_of"]
         for key, value in cost_map.items()
@@ -164,17 +164,20 @@ def alias_targets(cost_map: dict) -> dict[str, str]:
 
 
 def project_litellm(
-    cost_map: dict, enum: Sequence[str], registry: Mapping[str, object]
+    cost_map: dict,
+    enum: Sequence[str],
+    registry: Mapping[str, object],
+    aliases: Mapping[str, str] | None = None,
 ) -> dict:
-    """litellm's map in _data.json's layout, with no fills yet and an alias row projected from
-    its target's; plus "aliases", alias_targets(cost_map), which attach_fills reads and
-    dump_data leaves out. Never reads max_tokens."""
-    aliases = alias_targets(cost_map)
-    cost_map = {key: cost_map[aliases.get(key, key)] for key in cost_map}
+    """litellm's map in _data.json's layout, with no fills yet. Each of `aliases`, as
+    alias_targets(cost_map) gives them, is a copy of its target's row in the alias's own
+    place, and never an ai21 chat row, since litellm 1.109.0 knows no aliases. Never reads
+    max_tokens."""
+    aliases = aliases or {}
     rules = cost_map.get("fallback_generalizations", {}).get("rules", [])
     rows = {}
     for key, value in cost_map.items():
-        if key in RESERVED_KEYS:
+        if key in RESERVED_KEYS or key in aliases:
             continue
         if not isinstance(value, dict) or not isinstance(
             value.get("litellm_provider"), str
@@ -188,6 +191,11 @@ def project_litellm(
             positive_int(value.get("max_output_tokens"), f"{key}.max_output_tokens"),
             None,
         ]
+    rows = {
+        key: list(rows[aliases.get(key, key)])
+        for key in cost_map
+        if key not in RESERVED_KEYS
+    }
     return {
         "providers": sorted(set(enum) | set(registry)),
         "routing": [
@@ -201,12 +209,12 @@ def project_litellm(
             key
             for key, value in cost_map.items()
             if key not in RESERVED_KEYS
+            and key not in aliases
             and value["litellm_provider"] == "ai21"
             and value.get("mode") == "chat"
         ],
         "rows": rows,
         "fills": {},
-        "aliases": aliases,
     }
 
 
@@ -262,18 +270,20 @@ def same_family(row_provider: str, slug: str) -> bool:
 
 
 def attach_fills(
-    data: dict, entries: Sequence[Entry]
+    data: dict, entries: Sequence[Entry], aliases: Mapping[str, str] | None = None
 ) -> tuple[dict, list[Disagreement], dict]:
     """models.dev's entries merged into litellm's rows, the disagreements, and counts.
 
-    Each entry is resolved as ctxlen resolves an id, over litellm's rows only. A hit on a row
-    of the same family fills the row's missing fields and its context; where both have a
-    number and they differ by more than DISAGREEMENT_RATIO, litellm's stays and the pair is
-    a disagreement. A hit on another family adds nothing, so a host's number never lands on
-    a lab's row. A miss becomes a fill row. The first entry wins each field. Last, a context
-    below its row's own limits is dropped and reported, and each alias row becomes a copy of
-    its target's. So a fill never changes a number litellm gives.
+    Each entry is resolved as ctxlen resolves an id, over litellm's rows only; a hit on an
+    alias of `aliases` is a hit on its target. A hit on a row of the same family fills the
+    row's missing fields and its context; where both have a number and they differ by more
+    than DISAGREEMENT_RATIO, litellm's stays and the pair is a disagreement. A hit on another
+    family adds nothing, so a host's number never lands on a lab's row. A miss becomes a fill
+    row. The first entry wins each field. Last, a context below its row's own limits is
+    dropped and reported, and each alias row becomes a copy of its target's. So a fill never
+    changes a number litellm gives.
     """
+    aliases = aliases or {}
     litellm_only = build_index({**data, "fills": {}})
     rows = {key: list(row) for key, row in data["rows"].items()}
     fills, disagreements, context_source = {}, [], {}
@@ -287,7 +297,7 @@ def attach_fills(
                 fills[entry.model] = list(entry[2:6])
                 context_source[entry.model] = entry.source
             continue
-        key, litellm_row = hit
+        key, litellm_row = aliases.get(hit[0], hit[0]), hit[1]
         if not same_family(litellm_row[0], entry.slug):
             continue
         row = rows[key]
@@ -311,7 +321,7 @@ def attach_fills(
             source = context_source.get(key, "")
             disagreements.append(Disagreement(key, "context", bound, row[3], source))
             row[3] = None
-    for alias, target in data.get("aliases", {}).items():
+    for alias, target in aliases.items():
         rows[alias] = list(rows[target])
     disagreements.sort(key=lambda d: (d.key, d.field, d.source))
     merged = {**data, "rows": rows, "fills": dict(sorted(fills.items()))}

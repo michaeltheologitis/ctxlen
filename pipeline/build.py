@@ -269,14 +269,15 @@ def data(args: argparse.Namespace) -> None:
     meta = json.loads((args.inputs / "meta.json").read_text())
     if args.fault == "shrink":
         dropped = set([key for key in cost_map if key not in RESERVED_KEYS][1::2])
-        aliases = alias_targets(cost_map).items()
-        dropped |= {alias for alias, target in aliases if target in dropped}
+        pairs = alias_targets(cost_map).items()
+        dropped |= {alias for alias, target in pairs if target in dropped}
         cost_map = {key: value for key, value in cost_map.items() if key not in dropped}
     enum = read_provider_enum((args.inputs / "litellm_types_utils.py").read_text())
     registry = json.loads((args.inputs / "litellm_providers.json").read_text())
-    projected = project_litellm(cost_map, enum, registry)
+    aliases = alias_targets(cost_map)
+    projected = project_litellm(cost_map, enum, registry, aliases)
     entries, skipped = models_dev_entries(api, MODELS_DEV_PROVIDERS)
-    merged, disagreements, counts = attach_fills(projected, entries)
+    merged, disagreements, counts = attach_fills(projected, entries, aliases)
     previous = previous_data(args.pypi / "latest.whl")
     check_gate(merged, previous)
     DATA_FILE.parent.mkdir(parents=True, exist_ok=True)

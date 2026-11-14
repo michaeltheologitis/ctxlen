@@ -110,12 +110,11 @@ E1_RATIO = 0.995
 
 
 def corpus(
-    cost_map: dict, api: dict, providers: Collection[str]
+    cost_map: dict, api: dict, providers: Collection[str], aliases: Mapping[str, str]
 ) -> list[tuple[str, str]]:
     """(group, id), deduplicated keeping the first group: key, prefixed, catalog, variant, non_model.
-    An alias key takes its target's provider, as its row in _data.json does."""
+    An alias key of `aliases` takes its target's provider, as its row in _data.json does."""
     keys = [key for key in cost_map if key not in RESERVED_KEYS]
-    aliases = alias_targets(cost_map)
     provider = {
         key: cost_map[aliases.get(key, key)]["litellm_provider"] for key in keys
     }
@@ -171,20 +170,28 @@ def variants(key: str, row_provider: str) -> list[str]:
     return found
 
 
-def check_loaded(model_cost: Mapping, cost_map: Mapping) -> list[str]:
-    """The proof that litellm loaded `cost_map`: [] when it did, else up to 20 mismatches."""
+def check_loaded(
+    model_cost: Mapping, cost_map: Mapping, aliases: Mapping[str, str]
+) -> list[str]:
+    """The proof that litellm loaded `cost_map`: [] when it did, else up to 20 mismatches. An
+    alias of `aliases` may hold its own row or, in a litellm that serves aliases, its target's."""
     expected = {
         key: value
         for key, value in cost_map.items()
         if key != "fallback_generalizations"
     }
     fields = ("litellm_provider", "max_input_tokens", "max_output_tokens")
+
+    def holds_target(key: str) -> bool:
+        target = cost_map[aliases[key]]
+        return all(model_cost[key].get(field) == target.get(field) for field in fields)
+
     mismatches = [f"missing: {key}" for key in expected if key not in model_cost]
     mismatches += [f"extra: {key}" for key in model_cost if key not in expected]
     mismatches += [
         f"changed: {key}.{field}: {model_cost[key].get(field)!r} != {value.get(field)!r}"
         for key, value in expected.items()
-        if key in model_cost
+        if key in model_cost and not (key in aliases and holds_target(key))
         for field in fields
         if model_cost[key].get(field) != value.get(field)
     ]
@@ -219,10 +226,13 @@ def compare(
     ctxlen_key: Callable[[str], str | None],
     litellm_key: Callable[[str], str | None],
     skip: Callable[[str], bool],
+    aliases: Mapping[str, str],
 ) -> dict:
     """Per-group agreement, the exclusions, the differences, and E1's verdict: it holds when
     every key and prefixed id agrees, E1_RATIO of the rest do, and none is ctxlen's alone.
-    litellm_key answers "rule" for a pattern rule's answer and "alias" for a provider_blind one."""
+    litellm_key answers "rule" for a pattern rule's answer and "alias" for a provider_blind one.
+    An alias of `aliases` and its target are the same answer: a litellm that serves aliases
+    may give either."""
     groups = {group: {"n": 0, "equal": 0} for group in GROUPS}
     excluded = {"pattern_rule": 0, "alias": 0, "network": 0}
     differences, ctxlen_only = [], 0
@@ -236,7 +246,7 @@ def compare(
             continue
         ours = ctxlen_key(model)
         groups[group]["n"] += 1
-        if ours == theirs:
+        if aliases.get(ours, ours) == aliases.get(theirs, theirs):
             groups[group]["equal"] += 1
             continue
         differences.append(
@@ -303,7 +313,8 @@ def main(argv: list[str] | None = None) -> int:
     import litellm.llms.scaledown.chat.transformation
 
     litellm.suppress_debug_info = True
-    mismatches = check_loaded(litellm.model_cost, cost_map)
+    aliases = alias_targets(cost_map)
+    mismatches = check_loaded(litellm.model_cost, cost_map, aliases)
     if mismatches:
         args.report.write_text(
             json.dumps({"loaded": False, "mismatches": mismatches}, indent=1)
@@ -318,7 +329,6 @@ def main(argv: list[str] | None = None) -> int:
     index = _resolve.shipped_index()._replace(fills={}, fill_lower={})
     api = json.loads((args.inputs / "models_dev.json").read_text())
     keys_lower = {key.lower() for key in litellm.model_cost}
-    aliases = alias_targets(cost_map)
 
     def ctxlen_key(model: str) -> str | None:
         hit = _resolve.find_row(model, index)
@@ -331,9 +341,8 @@ def main(argv: list[str] | None = None) -> int:
     def skip(model: str) -> bool:
         return _resolve.candidate_keys(model, index)[1] in NETWORK_PROVIDERS
 
-    report = compare(
-        corpus(cost_map, api, index.providers), ctxlen_key, litellm_key, skip
-    )
+    items = corpus(cost_map, api, index.providers, aliases)
+    report = compare(items, ctxlen_key, litellm_key, skip, aliases)
     report = {
         "loaded": True,
         "litellm": metadata.version("litellm"),
