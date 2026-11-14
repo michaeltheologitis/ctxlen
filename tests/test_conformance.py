@@ -1,8 +1,10 @@
+import functools
 from types import SimpleNamespace
 
 import pytest
 
 from ctxlen import _resolve
+from ctxlen._resolve import build_index
 from pipeline.conformance import (
     NON_MODELS,
     check_loaded,
@@ -11,10 +13,11 @@ from pipeline.conformance import (
     drift,
     litellm_answer,
     prefixed_form,
+    provider_blind,
     sample_keys,
     variants,
 )
-from tests.conftest import litellm_row, models_dev_model
+from tests.conftest import FIXTURE, litellm_row, models_dev_model
 
 COST_MAP = {
     "sample_spec": litellm_row("x"),
@@ -84,6 +87,13 @@ def test_corpus_groups_dedup_and_order():
     assert not {"sample_spec", "fallback_generalizations"} & {
         model for _, model in items
     }
+
+
+def test_corpus_gives_an_alias_its_targets_provider():
+    cost_map = {**COST_MAP, "claude-opus-latest": {"alias_of": "claude-opus-5-5"}}
+    items = corpus(cost_map, API, {"openai", "anthropic"})
+    assert ("key", "claude-opus-latest") in items
+    assert ("prefixed", "anthropic/claude-opus-latest") in items
 
 
 def test_corpus_is_deterministic():
@@ -180,6 +190,18 @@ def test_litellm_exceptions_are_none():
     assert litellm_answer(fake_get_model_info({}), {"gpt-4o"}, "not-a-model") is None
 
 
+def test_an_alias_litellm_matches_under_another_provider_is_provider_blind():
+    rows = {**FIXTURE["rows"], "claude-opus-latest": FIXTURE["rows"]["claude-opus-5-5"]}
+    index = build_index({**FIXTURE, "rows": rows})
+    aliases = {"claude-opus-latest": "claude-opus-5-5"}
+    blind = functools.partial(provider_blind, aliases=aliases, index=index)
+    assert blind("claude-opus-latest", "nano-gpt/claude-opus-latest")
+    assert not blind("claude-opus-latest", "anthropic/claude-opus-latest")
+    assert not blind("claude-opus-latest", "claude-opus-latest")
+    assert not blind("claude-opus-5-5", "nano-gpt/claude-opus-5-5")
+    assert not blind(None, "nano-gpt/claude-opus-latest")
+
+
 def test_compare_lists_differences_and_the_e1_verdict():
     items = [
         ("key", "a"),
@@ -187,14 +209,22 @@ def test_compare_lists_differences_and_the_e1_verdict():
         ("prefixed", "p/a"),
         ("catalog", "c"),
         ("variant", "v"),
+        ("variant", "nano-gpt/a-latest"),
         ("non_model", "x"),
     ]
     ours = {"a": "a", "b": "b", "p/a": "a", "c": "c", "v": "w"}
-    theirs = {"a": "a", "b": "b", "p/a": "a", "c": "rule", "v": "v"}
+    theirs = {
+        "a": "a",
+        "b": "b",
+        "p/a": "a",
+        "c": "rule",
+        "v": "v",
+        "nano-gpt/a-latest": "alias",
+    }
     report = compare(items, ours.get, theirs.get, lambda model: False)
     assert report["groups"]["key"] == {"n": 2, "equal": 2}
     assert report["groups"]["variant"] == {"n": 1, "equal": 0}
-    assert report["excluded"] == {"pattern_rule": 1, "network": 0}
+    assert report["excluded"] == {"pattern_rule": 1, "alias": 1, "network": 0}
     assert report["differences"] == [
         {"id": "v", "group": "variant", "ctxlen": "w", "litellm": "v"}
     ]

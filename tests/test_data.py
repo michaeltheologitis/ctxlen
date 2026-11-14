@@ -115,6 +115,42 @@ def test_routing_rules_are_the_provider_only_rules():
     assert projected["routing"] == [["^claude-", "anthropic"], ["^legacy-", "openai"]]
 
 
+def test_an_alias_answers_its_targets_numbers_fills_included():
+    cost_map = {
+        "gpt-6-astra": litellm_row("openai", 922000, 128000),
+        "gpt-astra-latest": {"alias_of": "gpt-6-astra"},
+    }
+    projected = project_litellm(cost_map, ["openai"], {})
+    merged, _, _ = attach_fills(
+        projected, [entry("openai/gpt-6-astra", context=1050000)]
+    )
+    shipped = json.loads(dump_data(merged))
+    assert set(shipped) == {"format", *FIXTURE}
+    assert shipped["rows"]["gpt-astra-latest"] == shipped["rows"]["gpt-6-astra"]
+    assert answers("openai/gpt-astra-latest", shipped) == (922000, 128000, 1050000)
+
+
+def test_an_alias_row_with_another_field_is_refused():
+    cost_map = {
+        "gpt-4o": litellm_row(max_input=128000),
+        "gpt-latest": {"alias_of": "gpt-4o", "max_input_tokens": 1},
+    }
+    with pytest.raises(DataError, match="gpt-latest.max_input_tokens"):
+        project_litellm(cost_map, [], {})
+
+
+@pytest.mark.parametrize("target", ["gpt-9", "gpt-latest", "sample_spec", 5, []])
+def test_an_alias_of_anything_but_a_model_row_is_refused(target):
+    cost_map = {
+        "sample_spec": litellm_row("one of the providers"),
+        "gpt-4o": litellm_row(max_input=128000),
+        "gpt-latest": {"alias_of": "gpt-4o"},
+        "gpt-newest": {"alias_of": target},
+    }
+    with pytest.raises(DataError, match="gpt-newest.alias_of"):
+        project_litellm(cost_map, [], {})
+
+
 def test_models_dev_input_cap_wins_over_context():
     api = {
         "openai": {"models": {"gpt-5": models_dev_model(400000, 128000, input=272000)}}

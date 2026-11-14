@@ -26,6 +26,7 @@ COST_MAP = {
     "gemini/gemini-2.5-flash": litellm_row("gemini", 1048576),
     "mistral/mistral-large-4": litellm_row("mistral", 1048576),
     "mistral/mistral-small-4": litellm_row("mistral", 262144),
+    "claude-haiku-latest": {"alias_of": "claude-haiku-4-5"},
     "fallback_generalizations": {
         "rules": [
             {
@@ -94,6 +95,7 @@ def test_data_command_writes_the_data_and_reports_from_inputs(workspace):
     ]
     assert data["rows"]["gemini/gemini-2.5-pro"] == ["gemini", 1048576, None, None]
     assert data["rows"]["gpt-4o"] == ["openai", 128000, 16384, 200000]
+    assert data["rows"]["claude-haiku-latest"] == data["rows"]["claude-haiku-4-5"]
     assert data["fills"] == {
         "dashscope/qwen3.6-plus": ["dashscope", 1000000, 65536, 1000000]
     }
@@ -107,7 +109,7 @@ def test_data_command_writes_the_data_and_reports_from_inputs(workspace):
     ]
     provenance = json.loads((workspace / "reports/provenance.json").read_text())
     assert provenance["litellm"]["release"] == "1.104.2"
-    assert provenance["rows"]["litellm"] == 8
+    assert provenance["rows"]["litellm"] == 9
     assert provenance["field_fills"] == {"input": 0, "output": 1}
     assert provenance["disagreements"] == 1
     assert provenance["gate"]["previous"] is None

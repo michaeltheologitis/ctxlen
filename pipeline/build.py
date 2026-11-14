@@ -32,6 +32,7 @@ from pipeline.data import (
     SHRINK_LIMIT,
     DataError,
     GateError,
+    alias_targets,
     attach_fills,
     catalog_ids,
     check_gate,
@@ -268,6 +269,8 @@ def data(args: argparse.Namespace) -> None:
     meta = json.loads((args.inputs / "meta.json").read_text())
     if args.fault == "shrink":
         dropped = set([key for key in cost_map if key not in RESERVED_KEYS][1::2])
+        aliases = alias_targets(cost_map).items()
+        dropped |= {alias for alias, target in aliases if target in dropped}
         cost_map = {key: value for key, value in cost_map.items() if key not in dropped}
     enum = read_provider_enum((args.inputs / "litellm_types_utils.py").read_text())
     registry = json.loads((args.inputs / "litellm_providers.json").read_text())

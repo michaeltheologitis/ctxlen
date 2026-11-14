@@ -22,7 +22,7 @@ from types import ModuleType
 
 from ctxlen import _resolve
 from pipeline.build import output
-from pipeline.data import RESERVED_KEYS, catalog_ids
+from pipeline.data import RESERVED_KEYS, alias_targets, catalog_ids
 
 NON_MODELS: tuple[str, ...] = (
     "",
@@ -100,15 +100,21 @@ DRIFT_CHECKS = {
     ),
 }
 GROUPS = ("key", "prefixed", "catalog", "variant", "non_model")
+# What litellm_key answers for an id E1 does not compare, and the exclusion it counts in.
+MARKERS = {"rule": "pattern_rule", "alias": "alias"}
 E1_RATIO = 0.995
 
 
 def corpus(
     cost_map: dict, api: dict, providers: Collection[str]
 ) -> list[tuple[str, str]]:
-    """(group, id), deduplicated keeping the first group: key, prefixed, catalog, variant, non_model."""
+    """(group, id), deduplicated keeping the first group: key, prefixed, catalog, variant, non_model.
+    An alias key takes its target's provider, as its row in _data.json does."""
     keys = [key for key in cost_map if key not in RESERVED_KEYS]
-    provider = {key: cost_map[key]["litellm_provider"] for key in keys}
+    aliases = alias_targets(cost_map)
+    provider = {
+        key: cost_map[aliases.get(key, key)]["litellm_provider"] for key in keys
+    }
     groups = {
         "key": keys,
         "prefixed": [
@@ -192,6 +198,18 @@ def litellm_answer(
     return key if isinstance(key, str) and key.lower() in keys_lower else "rule"
 
 
+def provider_blind(
+    key: str | None, model: str, aliases: Collection[str], index: _resolve.Index
+) -> bool:
+    """Whether litellm's answer `key` is an alias row it matched only by knowing no aliases:
+    it reads {"alias_of": ...} as a row with no provider, which any provider matches, while
+    ctxlen's copy of the target's row matches the target's provider alone."""
+    if key not in aliases:
+        return False
+    provider = _resolve.candidate_keys(model, index)[1]
+    return not _resolve.provider_matches(index.rows[key][0], provider)
+
+
 def compare(
     corpus: Sequence[tuple[str, str]],
     ctxlen_key: Callable[[str], str | None],
@@ -199,17 +217,18 @@ def compare(
     skip: Callable[[str], bool],
 ) -> dict:
     """Per-group agreement, the exclusions, the differences, and E1's verdict: it holds when
-    every key and prefixed id agrees, E1_RATIO of the rest do, and none is ctxlen's alone."""
+    every key and prefixed id agrees, E1_RATIO of the rest do, and none is ctxlen's alone.
+    litellm_key answers "rule" for a pattern rule's answer and "alias" for a provider_blind one."""
     groups = {group: {"n": 0, "equal": 0} for group in GROUPS}
-    excluded = {"pattern_rule": 0, "network": 0}
+    excluded = {"pattern_rule": 0, "alias": 0, "network": 0}
     differences, ctxlen_only = [], 0
     for group, model in corpus:
         if skip(model):
             excluded["network"] += 1
             continue
         theirs = litellm_key(model)
-        if theirs == "rule":
-            excluded["pattern_rule"] += 1
+        if theirs in MARKERS:
+            excluded[MARKERS[theirs]] += 1
             continue
         ours = ctxlen_key(model)
         groups[group]["n"] += 1
@@ -294,19 +313,21 @@ def main(argv: list[str] | None = None) -> int:
     index = _resolve.shipped_index()._replace(fills={}, fill_lower={})
     api = json.loads((args.inputs / "models_dev.json").read_text())
     keys_lower = {key.lower() for key in litellm.model_cost}
+    aliases = alias_targets(cost_map)
 
     def ctxlen_key(model: str) -> str | None:
         hit = _resolve.find_row(model, index)
         return hit[0] if hit else None
 
+    def litellm_key(model: str) -> str | None:
+        key = litellm_answer(litellm.get_model_info, keys_lower, model)
+        return "alias" if provider_blind(key, model, aliases, index) else key
+
     def skip(model: str) -> bool:
         return _resolve.candidate_keys(model, index)[1] in NETWORK_PROVIDERS
 
     report = compare(
-        corpus(cost_map, api, index.providers),
-        ctxlen_key,
-        lambda model: litellm_answer(litellm.get_model_info, keys_lower, model),
-        skip,
+        corpus(cost_map, api, index.providers), ctxlen_key, litellm_key, skip
     )
     report = {
         "loaded": True,
