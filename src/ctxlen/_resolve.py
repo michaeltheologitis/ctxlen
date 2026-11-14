@@ -125,6 +125,9 @@ FIREROUTER = "firerouter"
 FIREWORKS_KEPT_PREFIXES = ("accounts/", "FW-")
 MATCH_ANY_PROVIDERS = frozenset({"litellm_proxy", "github", "nadir"})
 DATED_SUFFIX = re.compile(r"-\d{4}-\d{2}-\d{2}$")
+SCALEDOWN_MODELS = frozenset(
+    {"classify", "compress", "decisions", "extract", "summarize"}
+)
 
 
 def limits(
@@ -187,6 +190,9 @@ def find_row(model: str, index: Index) -> tuple[str, Row] | None:
     """The (key, row) litellm reaches for `model`: litellm's rows first, then the fills."""
     model = AZURE_ALIASES.get(model, model)
     candidates, provider = candidate_keys(model, index)
+    # get_model_info first asks ScaleDown's config, whose _operation rejects other models
+    if provider == "scaledown" and model.split("/", 1)[-1] not in SCALEDOWN_MODELS:
+        return None
     return first_match(candidates, provider, index.rows, index.lower) or first_match(
         candidates, provider, index.fills, index.fill_lower
     )

@@ -51,6 +51,10 @@ def found_key(model, index):
         ("fireworks_ai/auto", None),
         ("CLAUDE-SONNET-4-5", "claude-sonnet-4-5"),
         ("Bedrock/anthropic.claude-opus-4-6-v1", None),
+        ("scaledown/classify", "scaledown/classify"),
+        ("scaledown/classify-2099-01-01", None),
+        ("scaledown/CLASSIFY", None),
+        ("SCALEDOWN/CLASSIFY", "scaledown/classify"),
         # aliases, special cases and stripping
         ("gpt-35-turbo", "azure/gpt-35-turbo"),
         ("azure/gpt-41", "gpt-4.1"),

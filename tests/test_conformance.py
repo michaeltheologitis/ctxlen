@@ -51,6 +51,10 @@ def litellm_module(**changes):
     fireworks = SimpleNamespace(
         FIREROUTER="firerouter", AZURE_FOUNDRY_FIREWORKS_MODEL_ID_PREFIX="FW-"
     )
+    scaledown = SimpleNamespace(
+        DOMAIN_MODELS=frozenset({"classify", "extract", "summarize", "compress"}),
+        DECISIONS_MODELS=frozenset({"decisions"}),
+    )
     module = SimpleNamespace(
         azure_llms={k: v for k, v in _resolve.AZURE_ALIASES.items() if k != "ada"},
         azure_embedding_models={"ada": "azure/ada"},
@@ -63,6 +67,7 @@ def litellm_module(**changes):
         llms=SimpleNamespace(
             bedrock=SimpleNamespace(common_utils=common_utils),
             fireworks_ai=SimpleNamespace(common_utils=fireworks),
+            scaledown=SimpleNamespace(chat=SimpleNamespace(transformation=scaledown)),
         ),
     )
     for name, value in changes.items():

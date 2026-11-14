@@ -11,11 +11,13 @@ from pipeline.data import (
     Disagreement,
     Entry,
     GateError,
+    alias_targets,
     attach_fills,
     catalog_ids,
     check_gate,
     coverage,
     dump_data,
+    expand_aliases,
     models_dev_entries,
     positive_int,
     project_litellm,
@@ -113,6 +115,74 @@ def test_routing_rules_are_the_provider_only_rules():
     ]
     projected = project_litellm({"fallback_generalizations": {"rules": rules}}, [], {})
     assert projected["routing"] == [["^claude-", "anthropic"], ["^legacy-", "openai"]]
+
+
+def test_an_expanded_alias_is_a_copy_of_its_targets_row_in_its_own_place():
+    cost_map = {
+        "gpt-latest": {"alias_of": "gpt-4o"},
+        "gpt-4o": litellm_row(max_input=128000),
+        "fallback_generalizations": {"rules": []},
+    }
+    expanded = expand_aliases(cost_map)
+    assert list(expanded) == list(cost_map)
+    assert expanded["gpt-latest"] == expanded["gpt-4o"] == litellm_row(max_input=128000)
+    assert expanded["gpt-latest"] is not expanded["gpt-4o"]
+    assert cost_map["gpt-latest"] == {"alias_of": "gpt-4o"}
+
+
+def test_an_alias_row_with_another_field_is_refused():
+    cost_map = {
+        "gpt-4o": litellm_row(max_input=128000),
+        "gpt-latest": {"alias_of": "gpt-4o", "max_input_tokens": 1},
+    }
+    with pytest.raises(DataError, match="gpt-latest.max_input_tokens"):
+        expand_aliases(cost_map)
+
+
+@pytest.mark.parametrize("target", ["gpt-9", "gpt-latest", "sample_spec", 5, []])
+def test_an_alias_of_anything_but_a_model_row_is_refused(target):
+    cost_map = {
+        "sample_spec": litellm_row("one of the providers"),
+        "gpt-4o": litellm_row(max_input=128000),
+        "gpt-latest": {"alias_of": "gpt-4o"},
+        "gpt-newest": {"alias_of": target},
+    }
+    with pytest.raises(DataError, match="gpt-newest.alias_of"):
+        expand_aliases(cost_map)
+
+
+def test_an_alias_answers_its_targets_numbers_fills_included():
+    cost_map = {
+        "gpt-6-astra": litellm_row("openai", 922000, 128000),
+        "gpt-astra-latest": {"alias_of": "gpt-6-astra"},
+    }
+    projected = project_litellm(expand_aliases(cost_map), ["openai"], {})
+    fill = entry("openai/gpt-6-astra", context=1050000)
+    merged, _, _ = attach_fills(projected, [fill], alias_targets(cost_map))
+    shipped = json.loads(dump_data(merged))
+    assert set(shipped) == {"format", *FIXTURE}
+    assert shipped["rows"]["gpt-astra-latest"] == shipped["rows"]["gpt-6-astra"]
+    assert answers("openai/gpt-astra-latest", shipped) == (922000, 128000, 1050000)
+
+
+def test_a_models_dev_entry_for_an_alias_fills_its_target():
+    cost_map = {
+        "gpt-6-astra": litellm_row("openai", 922000),
+        "gpt-astra-latest": {"alias_of": "gpt-6-astra"},
+    }
+    projected = project_litellm(expand_aliases(cost_map), ["openai"], {})
+    fill = entry("openai/gpt-astra-latest", 1000000, 128000, context=1050000)
+    merged, disagreements, counts = attach_fills(
+        projected, [fill], alias_targets(cost_map)
+    )
+    assert merged["rows"]["gpt-6-astra"] == ["openai", 922000, 128000, 1050000]
+    assert merged["rows"]["gpt-astra-latest"] == merged["rows"]["gpt-6-astra"]
+    assert counts["field_fills_output"] == 1
+    assert disagreements == [
+        Disagreement(
+            "gpt-6-astra", "max_input", 922000, 1000000, "openai/gpt-astra-latest"
+        )
+    ]
 
 
 def test_models_dev_input_cap_wins_over_context():

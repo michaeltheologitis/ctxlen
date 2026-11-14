@@ -1,8 +1,9 @@
 """E1: ctxlen's built wheel and litellm release R find the same row, over the same JSON.
 
 `python -m pipeline.conformance`, in a venv holding litellm==R and the wheel. litellm reads its
-map from a local server that serves this run's inputs/litellm.json, and check_loaded proves that
-it did: litellm falls back to its bundled copy silently.
+map from a local server that serves this run's inputs/litellm.json with each alias row expanded
+to its target's row, the map the wheel's data is built from, written beside it as SERVED_MAP;
+check_loaded proves that it did: litellm falls back to its bundled copy silently.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from types import ModuleType
 
 from ctxlen import _resolve
 from pipeline.build import output
-from pipeline.data import RESERVED_KEYS, catalog_ids
+from pipeline.data import RESERVED_KEYS, catalog_ids, expand_aliases
 
 NON_MODELS: tuple[str, ...] = (
     "",
@@ -98,8 +99,13 @@ DRIFT_CHECKS = {
         "accounts/",
         m.llms.fireworks_ai.common_utils.AZURE_FOUNDRY_FIREWORKS_MODEL_ID_PREFIX,
     ),
+    "SCALEDOWN_MODELS": lambda m: (
+        m.llms.scaledown.chat.transformation.DOMAIN_MODELS
+        | m.llms.scaledown.chat.transformation.DECISIONS_MODELS
+    ),
 }
 GROUPS = ("key", "prefixed", "catalog", "variant", "non_model")
+SERVED_MAP = "litellm_expanded.json"
 E1_RATIO = 0.995
 
 
@@ -255,28 +261,31 @@ def drift(litellm: ModuleType) -> list[str]:
     return report
 
 
-def serve(directory: Path) -> str:
-    """Serves `directory` at a local URL from a daemon thread; returns the URL of its litellm.json."""
-    handler = functools.partial(SimpleHTTPRequestHandler, directory=str(directory))
+def serve(path: Path) -> str:
+    """Serves the file `path` at a local URL from a daemon thread; returns the URL."""
+    handler = functools.partial(SimpleHTTPRequestHandler, directory=str(path.parent))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
-    return f"http://127.0.0.1:{server.server_port}/litellm.json"
+    return f"http://127.0.0.1:{server.server_port}/{path.name}"
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Serves inputs/litellm.json locally, imports litellm, proves the load, compares, reports."""
+    """Serves the expanded map locally, imports litellm, proves the load, compares, reports."""
     parser = argparse.ArgumentParser(prog="python -m pipeline.conformance")
     parser.add_argument("--inputs", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args(argv)
-    cost_map = json.loads((args.inputs / "litellm.json").read_bytes())
-    os.environ["LITELLM_MODEL_COST_MAP_URL"] = serve(args.inputs)
+    cost_map = expand_aliases(json.loads((args.inputs / "litellm.json").read_bytes()))
+    served = args.inputs / SERVED_MAP
+    served.write_text(json.dumps(cost_map))
+    os.environ["LITELLM_MODEL_COST_MAP_URL"] = serve(served)
     # Imported only now, so that litellm reads the served map; drift reads the submodules.
     import litellm
     import litellm.constants
     import litellm.llms.bedrock.common_utils
     import litellm.llms.fireworks_ai.common_utils
+    import litellm.llms.scaledown.chat.transformation
 
     litellm.suppress_debug_info = True
     mismatches = check_loaded(litellm.model_cost, cost_map)

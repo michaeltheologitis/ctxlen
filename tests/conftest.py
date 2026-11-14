@@ -16,7 +16,7 @@ FIXTURE = {
         "openai", "anthropic", "vertex_ai", "gemini", "bedrock", "bedrock_converse",
         "bedrock_mantle", "mistral", "azure", "azure_ai", "ai21", "fireworks_ai",
         "github_copilot", "together_ai", "dashscope", "deepseek", "cohere", "cohere_chat",
-        "perplexity", "litellm_proxy", "github", "nano-gpt", "openrouter",
+        "perplexity", "litellm_proxy", "github", "nano-gpt", "openrouter", "scaledown",
     ],
     "routing": [
         ["^(?:[a-z-]+\\.)?anthropic\\.claude-", "bedrock"],
@@ -57,6 +57,7 @@ FIXTURE = {
         "command-r-08-2024": ["cohere_chat", 128000, 4096, None],
         "perplexity/sonar": ["perplexity", 128000, None, None],
         "gemini/gemini-2.5-pro-preview-tts": ["gemini", 8192, 16384, None],
+        "scaledown/classify": ["scaledown", None, None, None],
     },
     "fills": {
         "dashscope/qwen3.6-plus": ["dashscope", 1000000, 65536, 1000000],
