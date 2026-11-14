@@ -1,8 +1,9 @@
 """E1: ctxlen's built wheel and litellm release R find the same row, over the same JSON.
 
 `python -m pipeline.conformance`, in a venv holding litellm==R and the wheel. litellm reads its
-map from a local server that serves this run's inputs/litellm.json, and check_loaded proves that
-it did: litellm falls back to its bundled copy silently.
+map from a local server that serves this run's inputs/litellm.json with each alias row expanded
+to its target's row, the map the wheel's data is built from, written beside it as SERVED_MAP;
+check_loaded proves that it did: litellm falls back to its bundled copy silently.
 """
 
 from __future__ import annotations
@@ -22,7 +23,7 @@ from types import ModuleType
 
 from ctxlen import _resolve
 from pipeline.build import output
-from pipeline.data import RESERVED_KEYS, alias_targets, catalog_ids
+from pipeline.data import RESERVED_KEYS, catalog_ids, expand_aliases
 
 NON_MODELS: tuple[str, ...] = (
     "",
@@ -104,20 +105,16 @@ DRIFT_CHECKS = {
     ),
 }
 GROUPS = ("key", "prefixed", "catalog", "variant", "non_model")
-# What litellm_key answers for an id E1 does not compare, and the exclusion it counts in.
-MARKERS = {"rule": "pattern_rule", "alias": "alias"}
+SERVED_MAP = "litellm_expanded.json"
 E1_RATIO = 0.995
 
 
 def corpus(
-    cost_map: dict, api: dict, providers: Collection[str], aliases: Mapping[str, str]
+    cost_map: dict, api: dict, providers: Collection[str]
 ) -> list[tuple[str, str]]:
-    """(group, id), deduplicated keeping the first group: key, prefixed, catalog, variant, non_model.
-    An alias key of `aliases` takes its target's provider, as its row in _data.json does."""
+    """(group, id), deduplicated keeping the first group: key, prefixed, catalog, variant, non_model."""
     keys = [key for key in cost_map if key not in RESERVED_KEYS]
-    provider = {
-        key: cost_map[aliases.get(key, key)]["litellm_provider"] for key in keys
-    }
+    provider = {key: cost_map[key]["litellm_provider"] for key in keys}
     groups = {
         "key": keys,
         "prefixed": [
@@ -170,28 +167,20 @@ def variants(key: str, row_provider: str) -> list[str]:
     return found
 
 
-def check_loaded(
-    model_cost: Mapping, cost_map: Mapping, aliases: Mapping[str, str]
-) -> list[str]:
-    """The proof that litellm loaded `cost_map`: [] when it did, else up to 20 mismatches. An
-    alias of `aliases` may hold its own row or, in a litellm that serves aliases, its target's."""
+def check_loaded(model_cost: Mapping, cost_map: Mapping) -> list[str]:
+    """The proof that litellm loaded `cost_map`: [] when it did, else up to 20 mismatches."""
     expected = {
         key: value
         for key, value in cost_map.items()
         if key != "fallback_generalizations"
     }
     fields = ("litellm_provider", "max_input_tokens", "max_output_tokens")
-
-    def holds_target(key: str) -> bool:
-        target = cost_map[aliases[key]]
-        return all(model_cost[key].get(field) == target.get(field) for field in fields)
-
     mismatches = [f"missing: {key}" for key in expected if key not in model_cost]
     mismatches += [f"extra: {key}" for key in model_cost if key not in expected]
     mismatches += [
         f"changed: {key}.{field}: {model_cost[key].get(field)!r} != {value.get(field)!r}"
         for key, value in expected.items()
-        if key in model_cost and not (key in aliases and holds_target(key))
+        if key in model_cost
         for field in fields
         if model_cost[key].get(field) != value.get(field)
     ]
@@ -209,44 +198,28 @@ def litellm_answer(
     return key if isinstance(key, str) and key.lower() in keys_lower else "rule"
 
 
-def provider_blind(
-    key: str | None, model: str, aliases: Collection[str], index: _resolve.Index
-) -> bool:
-    """Whether litellm's answer `key` is an alias row it matched only by knowing no aliases:
-    it reads {"alias_of": ...} as a row with no provider, which any provider matches, while
-    ctxlen's copy of the target's row matches the target's provider alone."""
-    if key not in aliases:
-        return False
-    provider = _resolve.candidate_keys(model, index)[1]
-    return not _resolve.provider_matches(index.rows[key][0], provider)
-
-
 def compare(
     corpus: Sequence[tuple[str, str]],
     ctxlen_key: Callable[[str], str | None],
     litellm_key: Callable[[str], str | None],
     skip: Callable[[str], bool],
-    aliases: Mapping[str, str],
 ) -> dict:
     """Per-group agreement, the exclusions, the differences, and E1's verdict: it holds when
-    every key and prefixed id agrees, E1_RATIO of the rest do, and none is ctxlen's alone.
-    litellm_key answers "rule" for a pattern rule's answer and "alias" for a provider_blind one.
-    An alias of `aliases` and its target are the same answer: a litellm that serves aliases
-    may give either."""
+    every key and prefixed id agrees, E1_RATIO of the rest do, and none is ctxlen's alone."""
     groups = {group: {"n": 0, "equal": 0} for group in GROUPS}
-    excluded = {"pattern_rule": 0, "alias": 0, "network": 0}
+    excluded = {"pattern_rule": 0, "network": 0}
     differences, ctxlen_only = [], 0
     for group, model in corpus:
         if skip(model):
             excluded["network"] += 1
             continue
         theirs = litellm_key(model)
-        if theirs in MARKERS:
-            excluded[MARKERS[theirs]] += 1
+        if theirs == "rule":
+            excluded["pattern_rule"] += 1
             continue
         ours = ctxlen_key(model)
         groups[group]["n"] += 1
-        if aliases.get(ours, ours) == aliases.get(theirs, theirs):
+        if ours == theirs:
             groups[group]["equal"] += 1
             continue
         differences.append(
@@ -288,23 +261,25 @@ def drift(litellm: ModuleType) -> list[str]:
     return report
 
 
-def serve(directory: Path) -> str:
-    """Serves `directory` at a local URL from a daemon thread; returns the URL of its litellm.json."""
-    handler = functools.partial(SimpleHTTPRequestHandler, directory=str(directory))
+def serve(path: Path) -> str:
+    """Serves the file `path` at a local URL from a daemon thread; returns the URL."""
+    handler = functools.partial(SimpleHTTPRequestHandler, directory=str(path.parent))
     server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
-    return f"http://127.0.0.1:{server.server_port}/litellm.json"
+    return f"http://127.0.0.1:{server.server_port}/{path.name}"
 
 
 def main(argv: list[str] | None = None) -> int:
-    """Serves inputs/litellm.json locally, imports litellm, proves the load, compares, reports."""
+    """Serves the expanded map locally, imports litellm, proves the load, compares, reports."""
     parser = argparse.ArgumentParser(prog="python -m pipeline.conformance")
     parser.add_argument("--inputs", type=Path, required=True)
     parser.add_argument("--report", type=Path, required=True)
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args(argv)
-    cost_map = json.loads((args.inputs / "litellm.json").read_bytes())
-    os.environ["LITELLM_MODEL_COST_MAP_URL"] = serve(args.inputs)
+    cost_map = expand_aliases(json.loads((args.inputs / "litellm.json").read_bytes()))
+    served = args.inputs / SERVED_MAP
+    served.write_text(json.dumps(cost_map))
+    os.environ["LITELLM_MODEL_COST_MAP_URL"] = serve(served)
     # Imported only now, so that litellm reads the served map; drift reads the submodules.
     import litellm
     import litellm.constants
@@ -313,8 +288,7 @@ def main(argv: list[str] | None = None) -> int:
     import litellm.llms.scaledown.chat.transformation
 
     litellm.suppress_debug_info = True
-    aliases = alias_targets(cost_map)
-    mismatches = check_loaded(litellm.model_cost, cost_map, aliases)
+    mismatches = check_loaded(litellm.model_cost, cost_map)
     if mismatches:
         args.report.write_text(
             json.dumps({"loaded": False, "mismatches": mismatches}, indent=1)
@@ -334,15 +308,15 @@ def main(argv: list[str] | None = None) -> int:
         hit = _resolve.find_row(model, index)
         return hit[0] if hit else None
 
-    def litellm_key(model: str) -> str | None:
-        key = litellm_answer(litellm.get_model_info, keys_lower, model)
-        return "alias" if provider_blind(key, model, aliases, index) else key
-
     def skip(model: str) -> bool:
         return _resolve.candidate_keys(model, index)[1] in NETWORK_PROVIDERS
 
-    items = corpus(cost_map, api, index.providers, aliases)
-    report = compare(items, ctxlen_key, litellm_key, skip, aliases)
+    report = compare(
+        corpus(cost_map, api, index.providers),
+        ctxlen_key,
+        lambda model: litellm_answer(litellm.get_model_info, keys_lower, model),
+        skip,
+    )
     report = {
         "loaded": True,
         "litellm": metadata.version("litellm"),

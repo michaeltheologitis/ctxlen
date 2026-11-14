@@ -3,7 +3,6 @@ from types import SimpleNamespace
 import pytest
 
 from ctxlen import _resolve
-from ctxlen._resolve import build_index
 from pipeline.conformance import (
     NON_MODELS,
     check_loaded,
@@ -12,11 +11,10 @@ from pipeline.conformance import (
     drift,
     litellm_answer,
     prefixed_form,
-    provider_blind,
     sample_keys,
     variants,
 )
-from tests.conftest import FIXTURE, litellm_row, models_dev_model
+from tests.conftest import litellm_row, models_dev_model
 
 COST_MAP = {
     "sample_spec": litellm_row("x"),
@@ -78,7 +76,7 @@ def litellm_module(**changes):
 
 
 def test_corpus_groups_dedup_and_order():
-    items = corpus(COST_MAP, API, {"openai", "anthropic"}, {})
+    items = corpus(COST_MAP, API, {"openai", "anthropic"})
     groups = {}
     for group, model in items:
         groups.setdefault(group, []).append(model)
@@ -93,18 +91,8 @@ def test_corpus_groups_dedup_and_order():
     }
 
 
-def test_corpus_gives_an_alias_its_targets_provider():
-    cost_map = {**COST_MAP, "claude-opus-latest": {"alias_of": "claude-opus-5-5"}}
-    aliases = {"claude-opus-latest": "claude-opus-5-5"}
-    items = corpus(cost_map, API, {"openai", "anthropic"}, aliases)
-    assert ("key", "claude-opus-latest") in items
-    assert ("prefixed", "anthropic/claude-opus-latest") in items
-
-
 def test_corpus_is_deterministic():
-    assert corpus(COST_MAP, API, {"openai"}, {}) == corpus(
-        COST_MAP, API, {"openai"}, {}
-    )
+    assert corpus(COST_MAP, API, {"openai"}) == corpus(COST_MAP, API, {"openai"})
     keys = [f"model-{n}" for n in range(1000)]
     assert sample_keys(keys, 10) == sample_keys(reversed(keys), 10)
     assert len(set(sample_keys(keys, 10))) == 10
@@ -180,29 +168,9 @@ def test_check_loaded_detects_a_fallback_map(change):
         for key, value in COST_MAP.items()
         if key != "fallback_generalizations"
     }
-    assert check_loaded(loaded, COST_MAP, {}) == []
+    assert check_loaded(loaded, COST_MAP) == []
     change(loaded)
-    assert check_loaded(loaded, COST_MAP, {}) != []
-
-
-@pytest.mark.parametrize(
-    "held, loaded",
-    [
-        pytest.param({"alias_of": "claude-opus-5-5"}, True, id="its own row"),
-        pytest.param(COST_MAP["claude-opus-5-5"], True, id="its target's row"),
-        pytest.param(COST_MAP["gpt-4o"], False, id="another row"),
-    ],
-)
-def test_check_loaded_takes_an_alias_holding_its_own_row_or_its_targets(held, loaded):
-    cost_map = {**COST_MAP, "claude-opus-latest": {"alias_of": "claude-opus-5-5"}}
-    model_cost = {
-        key: value
-        for key, value in cost_map.items()
-        if key != "fallback_generalizations"
-    }
-    model_cost["claude-opus-latest"] = held
-    aliases = {"claude-opus-latest": "claude-opus-5-5"}
-    assert (check_loaded(model_cost, cost_map, aliases) == []) is loaded
+    assert check_loaded(loaded, COST_MAP) != []
 
 
 def test_pattern_rule_answers_are_marked_rule():
@@ -217,25 +185,6 @@ def test_litellm_exceptions_are_none():
     assert litellm_answer(fake_get_model_info({}), {"gpt-4o"}, "not-a-model") is None
 
 
-@pytest.mark.parametrize(
-    "key, model, blind",
-    [
-        ("claude-opus-latest", "nano-gpt/claude-opus-latest", True),
-        ("claude-opus-latest", "anthropic/claude-opus-latest", False),
-        ("claude-opus-latest", "claude-opus-latest", False),
-        ("claude-opus-5-5", "nano-gpt/claude-opus-5-5", False),
-        (None, "nano-gpt/claude-opus-latest", False),
-    ],
-)
-def test_provider_blind_only_when_litellm_matched_an_alias_outside_its_targets_provider(
-    key, model, blind
-):
-    rows = {**FIXTURE["rows"], "claude-opus-latest": FIXTURE["rows"]["claude-opus-5-5"]}
-    index = build_index({**FIXTURE, "rows": rows})
-    aliases = {"claude-opus-latest": "claude-opus-5-5"}
-    assert provider_blind(key, model, aliases, index) is blind
-
-
 def test_compare_lists_differences_and_the_e1_verdict():
     items = [
         ("key", "a"),
@@ -243,22 +192,14 @@ def test_compare_lists_differences_and_the_e1_verdict():
         ("prefixed", "p/a"),
         ("catalog", "c"),
         ("variant", "v"),
-        ("variant", "nano-gpt/a-latest"),
         ("non_model", "x"),
     ]
     ours = {"a": "a", "b": "b", "p/a": "a", "c": "c", "v": "w"}
-    theirs = {
-        "a": "a",
-        "b": "b",
-        "p/a": "a",
-        "c": "rule",
-        "v": "v",
-        "nano-gpt/a-latest": "alias",
-    }
-    report = compare(items, ours.get, theirs.get, lambda model: False, {})
+    theirs = {"a": "a", "b": "b", "p/a": "a", "c": "rule", "v": "v"}
+    report = compare(items, ours.get, theirs.get, lambda model: False)
     assert report["groups"]["key"] == {"n": 2, "equal": 2}
     assert report["groups"]["variant"] == {"n": 1, "equal": 0}
-    assert report["excluded"] == {"pattern_rule": 1, "alias": 1, "network": 0}
+    assert report["excluded"] == {"pattern_rule": 1, "network": 0}
     assert report["differences"] == [
         {"id": "v", "group": "variant", "ctxlen": "w", "litellm": "v"}
     ]
@@ -275,41 +216,9 @@ def test_compare_counts_ids_only_ctxlen_answers():
         {"a": "a", "b": "b"}.get,
         {"a": "a"}.get,
         lambda m: False,
-        {},
     )
     assert report["ctxlen_only"] == 1
     assert report["e1"]["holds"] is False
-
-
-def test_compare_takes_an_alias_and_its_target_as_the_same_answer():
-    aliases = {
-        "claude-opus-latest": "claude-opus-5-5",
-        "claude-sonnet-latest": "claude-sonnet-5-5",
-    }
-    # a litellm that serves aliases may answer an alias id with its target's key
-    get_model_info = fake_get_model_info(
-        {"claude-opus-latest": "claude-opus-5-5", "claude-latest": "claude-opus-5-5"}
-    )
-    ours = {
-        "claude-opus-latest": "claude-opus-latest",
-        "claude-latest": "claude-sonnet-latest",
-    }
-    report = compare(
-        [("key", "claude-opus-latest"), ("catalog", "claude-latest")],
-        ours.get,
-        lambda model: litellm_answer(get_model_info, {"claude-opus-5-5"}, model),
-        lambda model: False,
-        aliases,
-    )
-    assert report["groups"]["key"] == {"n": 1, "equal": 1}
-    assert report["differences"] == [
-        {
-            "id": "claude-latest",
-            "group": "catalog",
-            "ctxlen": "claude-sonnet-latest",
-            "litellm": "claude-opus-5-5",
-        }
-    ]
 
 
 def test_compare_skips_network_providers():
@@ -323,7 +232,6 @@ def test_compare_skips_network_providers():
         {}.get,
         litellm_key,
         lambda m: "/" in m,
-        {},
     )
     assert asked == ["y"]
     assert report["excluded"]["network"] == 1

@@ -163,21 +163,24 @@ def alias_targets(cost_map: dict) -> dict[str, str]:
     return aliases
 
 
+def expand_aliases(cost_map: dict) -> dict:
+    """`cost_map` with each alias row, in its place, a copy of its target's row: litellm main's
+    meaning of an alias. DataError as alias_targets gives it."""
+    aliases = alias_targets(cost_map)
+    return {
+        key: dict(cost_map[aliases[key]]) if key in aliases else value
+        for key, value in cost_map.items()
+    }
+
+
 def project_litellm(
-    cost_map: dict,
-    enum: Sequence[str],
-    registry: Mapping[str, object],
-    aliases: Mapping[str, str] | None = None,
+    cost_map: dict, enum: Sequence[str], registry: Mapping[str, object]
 ) -> dict:
-    """litellm's map in _data.json's layout, with no fills yet. Each of `aliases`, as
-    alias_targets(cost_map) gives them, is a copy of its target's row in the alias's own
-    place, and never an ai21 chat row, since litellm 1.109.0 knows no aliases. Never reads
-    max_tokens."""
-    aliases = aliases or {}
+    """litellm's map in _data.json's layout, with no fills yet. Never reads max_tokens."""
     rules = cost_map.get("fallback_generalizations", {}).get("rules", [])
     rows = {}
     for key, value in cost_map.items():
-        if key in RESERVED_KEYS or key in aliases:
+        if key in RESERVED_KEYS:
             continue
         if not isinstance(value, dict) or not isinstance(
             value.get("litellm_provider"), str
@@ -191,11 +194,6 @@ def project_litellm(
             positive_int(value.get("max_output_tokens"), f"{key}.max_output_tokens"),
             None,
         ]
-    rows = {
-        key: list(rows[aliases.get(key, key)])
-        for key in cost_map
-        if key not in RESERVED_KEYS
-    }
     return {
         "providers": sorted(set(enum) | set(registry)),
         "routing": [
@@ -209,7 +207,6 @@ def project_litellm(
             key
             for key, value in cost_map.items()
             if key not in RESERVED_KEYS
-            and key not in aliases
             and value["litellm_provider"] == "ai21"
             and value.get("mode") == "chat"
         ],
