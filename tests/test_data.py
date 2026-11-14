@@ -401,6 +401,44 @@ def test_a_window_the_limits_allow_is_models_devs(
     assert _resolve.limits(model, "ctxlen")[2] == models_dev_context
 
 
+@pytest.mark.parametrize("models_dev_context, kept", [(400000, True), (420000, False)])
+def test_a_window_at_most_five_percent_over_the_ceiling_is_kept(
+    models_dev_context, kept
+):
+    rows = {**FIXTURE["rows"], "gpt-5": ["openai", 272000, 120000, None]}
+    fill = entry("openai/gpt-5", context=models_dev_context)
+    merged, disagreements, _ = attach_fills({**FIXTURE, "rows": rows}, [fill])
+    assert merged["rows"]["gpt-5"][3] == (models_dev_context if kept else None)
+    rejected = Disagreement("gpt-5", "context", 392000, 420000, "openai/gpt-5")
+    assert disagreements == ([] if kept else [rejected])
+
+
+def test_a_rejected_window_leaves_the_row_to_a_later_entry():
+    model = "mistral/codestral-latest"
+    entries = [
+        entry(model, context=256000, source="a"),
+        entry(model, context=128000, source="b"),
+    ]
+    merged, disagreements, _ = attach_fills(FIXTURE, entries)
+    assert merged["rows"][model] == ["mistral", 128000, 128000, 128000]
+    assert disagreements == [Disagreement(model, "context", 128000, 256000, "a")]
+
+
+def test_a_fill_with_equal_limits_keeps_a_larger_window():
+    fill = entry("zai/glm-9", 128000, 128000, context=256000)
+    merged, disagreements, _ = attach_fills(FIXTURE, [fill])
+    assert merged["fills"]["zai/glm-9"] == ["zai", 128000, 128000, 256000]
+    assert disagreements == []
+
+
+def test_a_max_output_filled_from_models_dev_is_not_litellms_padding():
+    key = "together_ai/meta-llama/Llama-3.3-70B-Instruct-Turbo"
+    fill = entry(key, max_output=131072, context=262144)
+    merged, disagreements, _ = attach_fills(FIXTURE, [fill])
+    assert merged["rows"][key] == ["together_ai", 131072, 131072, 262144]
+    assert disagreements == []
+
+
 def test_first_entry_wins_for_a_field():
     entries = [
         entry("mistral/mistral-large-4", max_output=1, source="a"),
