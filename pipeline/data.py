@@ -276,8 +276,9 @@ def attach_fills(
     row's missing fields and its context; where both have a number and they differ by more
     than DISAGREEMENT_RATIO, litellm's stays and the pair is a disagreement. A hit on another
     family adds nothing, so a host's number never lands on a lab's row. A miss becomes a fill
-    row. The first entry wins each field. Last, a context below its row's own limits is
-    dropped and reported, and each alias row becomes a copy of its target's. So a fill never
+    row. The first entry wins each field. Last, a context outside its row's own limits
+    (broken_bound) is dropped and reported, and each alias row becomes a copy of its
+    target's. So a fill never
     changes a number litellm gives.
     """
     aliases = aliases or {}
@@ -313,8 +314,8 @@ def attach_fills(
                     Disagreement(key, field, theirs, value, entry.source)
                 )
     for key, row in [*rows.items(), *fills.items()]:
-        bound = max((limit for limit in row[1:3] if limit is not None), default=0)
-        if row[3] is not None and row[3] < bound:
+        bound = broken_bound(row)
+        if bound is not None:
             source = context_source.get(key, "")
             disagreements.append(Disagreement(key, "context", bound, row[3], source))
             row[3] = None
@@ -323,6 +324,27 @@ def attach_fills(
     disagreements.sort(key=lambda d: (d.key, d.field, d.source))
     merged = {**data, "rows": rows, "fills": dict(sorted(fills.items()))}
     return merged, disagreements, counts
+
+
+def broken_bound(row: Sequence) -> int | None:
+    """The bound of the row's own limits that its context breaks, or None if it breaks none.
+
+    A window is at least the larger limit and at most max_input + max_output, or max_input
+    alone where max_output equals it: litellm's padding for a reply that can fill the window.
+    With either limit unknown, nothing bounds it from above.
+    """
+    _, max_input, max_output, context = row
+    if context is None:
+        return None
+    floor = max(
+        (limit for limit in (max_input, max_output) if limit is not None), default=0
+    )
+    if context < floor:
+        return floor
+    if max_input is None or max_output is None:
+        return None
+    ceiling = max_input if max_input == max_output else max_input + max_output
+    return ceiling if context > ceiling else None
 
 
 def check_gate(data: dict, previous: dict | None) -> None:

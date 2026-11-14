@@ -165,6 +165,25 @@ def test_an_alias_answers_its_targets_numbers_fills_included():
     assert answers("openai/gpt-astra-latest", shipped) == (922000, 128000, 1050000)
 
 
+def test_an_alias_gets_its_targets_row_after_the_window_rule():
+    cost_map = {
+        "mistral/codestral-2508": litellm_row("mistral", 128000, 128000),
+        "mistral/codestral-latest": {"alias_of": "mistral/codestral-2508"},
+    }
+    projected = project_litellm(expand_aliases(cost_map), ["mistral"], {})
+    fill = entry("mistral/codestral-latest", context=256000)
+    merged, disagreements, _ = attach_fills(projected, [fill], alias_targets(cost_map))
+    assert merged["rows"]["mistral/codestral-latest"] == [
+        "mistral",
+        128000,
+        128000,
+        None,
+    ]
+    assert disagreements == [
+        Disagreement("mistral/codestral-2508", "context", 128000, 256000, fill.source)
+    ]
+
+
 def test_a_models_dev_entry_for_an_alias_fills_its_target():
     cost_map = {
         "gpt-6-astra": litellm_row("openai", 922000),
@@ -339,6 +358,47 @@ def test_a_context_below_the_rows_own_limits_is_dropped_and_reported():
         Disagreement("gpt-4.1", "context", 1047576, 1000000, "openai/gpt-4.1"),
         Disagreement("zai/glm-9", "context", 300000, 200000, "zai/glm-9"),
     ]
+
+
+@pytest.mark.parametrize(
+    "model, models_dev_context, total",
+    [("mistral/codestral-latest", 256000, 128000), ("azure_ai/Phi-4", 128000, 16384)],
+)
+def test_a_padded_rows_window_is_its_max_input(
+    model, models_dev_context, total, monkeypatch
+):
+    merged, _, _ = attach_fills(FIXTURE, [entry(model, context=models_dev_context)])
+    monkeypatch.setattr(_resolve, "shipped_index", lambda: build_index(merged))
+    assert _resolve.limits(model, "ctxlen")[2] == total
+
+
+def test_a_window_above_the_sum_of_the_limits_is_dropped_and_reported(monkeypatch):
+    model = "anthropic/claude-sonnet-4-5"
+    merged, disagreements, _ = attach_fills(FIXTURE, [entry(model, context=1000000)])
+    assert disagreements == [
+        Disagreement("claude-sonnet-4-5", "context", 264000, 1000000, model)
+    ]
+    monkeypatch.setattr(_resolve, "shipped_index", lambda: build_index(merged))
+    assert _resolve.limits("claude-sonnet-4-5", "ctxlen")[2] == 200000
+
+
+@pytest.mark.parametrize(
+    "model, models_dev_context",
+    [
+        ("openai/gpt-6-sol", 1050000),
+        ("openai/gpt-5", 400000),
+        ("perplexity/sonar", 200000),
+    ],
+)
+def test_a_window_the_limits_allow_is_models_devs(
+    model, models_dev_context, monkeypatch
+):
+    merged, disagreements, _ = attach_fills(
+        FIXTURE, [entry(model, context=models_dev_context)]
+    )
+    assert disagreements == []
+    monkeypatch.setattr(_resolve, "shipped_index", lambda: build_index(merged))
+    assert _resolve.limits(model, "ctxlen")[2] == models_dev_context
 
 
 def test_first_entry_wins_for_a_field():
