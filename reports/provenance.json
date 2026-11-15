@@ -1,49 +1,49 @@
 {
- "built_at": "2026-11-07T18:45:32Z",
+ "built_at": "2026-11-15T00:53:24Z",
  "litellm": {
-  "commit": "268bc0345c53409342a6da56a96134034040aabe",
-  "json_sha256": "e075de4f8d3f3e32978b90d52dfa84796d8bb4f9d9ed2dc386e0dd4372ee8f7b",
-  "release": "1.108.0"
+  "commit": "fbc7fd30b2ac4000a1e58519d6764da2ab095355",
+  "json_sha256": "3b5829b9df6a8d32f5ad44f8ec09001b0c31ac8553734a160d0fb0ba95573889",
+  "release": "1.109.0"
  },
  "models_dev": {
-  "api_sha256": "33a90dbbec04c7090ec0718e4e0f72a0036a107c2e1bb2ce1db4bc1a383fd292",
-  "fetched_at": "2026-11-07T18:45:30Z",
-  "dev_head": "6708305da4af45343989cd7a1750678413e2c614"
+  "api_sha256": "75d7f8b39c5f4eeaa2c91bd65ab6da7ee0695a5ca439e0ae125b52a704b6051b",
+  "fetched_at": "2026-11-15T00:53:19Z",
+  "dev_head": "cf1019f99b26250a12576ee9fffb8672b45104bb"
  },
  "rows": {
-  "litellm": 4770,
-  "with_input": 3880,
-  "with_output": 3517,
-  "with_context": 803,
-  "fills": 1370,
-  "providers": 181
+  "litellm": 5992,
+  "with_input": 4046,
+  "with_output": 3672,
+  "with_context": 862,
+  "fills": 1368,
+  "providers": 194
  },
  "field_fills": {
-  "input": 2,
-  "output": 14
+  "input": 3,
+  "output": 17
  },
- "dropped_padding": 327,
+ "dropped_padding": 331,
  "skipped_models_dev": 0,
- "disagreements": 291,
+ "disagreements": 306,
  "coverage": {
-  "catalog": 2616,
-  "litellm_alone": 945,
-  "ctxlen": 2312,
-  "total_from_models_dev": 2177,
-  "total_from_litellm": 135,
-  "total_none": 304
+  "catalog": 2629,
+  "litellm_alone": 963,
+  "ctxlen": 2329,
+  "total_from_models_dev": 2178,
+  "total_from_litellm": 151,
+  "total_none": 300
  },
  "gate": {
   "previous": {
-   "rows": 4769,
-   "fills": 1371,
+   "rows": 4770,
+   "fills": 1370,
    "providers": 181
   },
   "shrink_limit": 0.25
  },
- "version": "2026.11.7.4",
+ "version": "2026.11.15.1",
  "e4": {
-  "wheel_bytes": 63420,
+  "wheel_bytes": 72377,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 4.971014999995305,
-    "first_lookup_ms": 41.786725999998,
-    "slowest_later_ms": 0.07095399999457186,
+    "import_ms": 6.140931000004457,
+    "first_lookup_ms": 52.20656800000256,
+    "slowest_later_ms": 0.1070490000074642,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 147.89937999999836,
+    "default_lookup_ms": 180.05765899999915,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 10.319406000007803,
-    "first_lookup_ms": 56.22178699999836,
-    "slowest_later_ms": 0.09560099999816885,
+    "import_ms": 12.650730999993698,
+    "first_lookup_ms": 71.00689700000373,
+    "slowest_later_ms": 0.15720300000054976,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 253.50862199999824,
+    "default_lookup_ms": 314.5731169999948,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
