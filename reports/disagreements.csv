@@ -46,7 +46,6 @@ azure_ai/mistral-small-2503,max_output,128000,32768,azure-cognitive-services/mis
 azure_ai/model-router,max_output,32768,16384,azure-cognitive-services/model-router
 baseten/deepseek-ai/DeepSeek-V4.1-Flash,max_output,262144,32768,baseten/deepseek-ai/DeepSeek-V4.1-Flash
 baseten/deepseek-ai/DeepSeek-V4.1-Flash-Fast,max_output,131072,32768,baseten/deepseek-ai/DeepSeek-V4.1-Flash-Fast
-baseten/moonshotai/Kimi-K3.1-Pro,context,1048576,1000000,baseten/moonshotai/Kimi-K3.1-Pro
 baseten/moonshotai/Kimi-K3.1-Pro,max_output,1048576,262144,baseten/moonshotai/Kimi-K3.1-Pro
 cerebras/gpt-oss-120b,max_output,32768,40960,cerebras/gpt-oss-120b
 cerebras/qwen-3.8-27b,context,98304,131072,cerebras/qwen-3.8-27b
