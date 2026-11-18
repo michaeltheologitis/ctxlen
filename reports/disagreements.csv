@@ -209,6 +209,10 @@ nebius/zai-org/GLM-5.3-Flash,context,1048576,1024000,nebius/zai-org/GLM-5.3-Flas
 novita/baai/bge-m3,context,96000,8192,novita-ai/baai/bge-m3
 novita/tencent/hy3,max_input,262144,192000,novita-ai/tencent/hy3
 nvidia.nemotron-super-3-120b,max_output,32000,131072,amazon-bedrock/nvidia.nemotron-super-3-120b
+nvidia_nim/deepseek-ai/deepseek-v4.1-flash,context,1048576,1000000,nvidia/deepseek-ai/deepseek-v4.1-flash
+nvidia_nim/deepseek-ai/deepseek-v4.1-flash,max_output,1048576,384000,nvidia/deepseek-ai/deepseek-v4.1-flash
+nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b,max_output,32768,65536,nvidia/nvidia/nemotron-3-ultra-550b-a55b
+nvidia_nim/nvidia/nemotron-3.5-super-vl-120b-a12b,max_output,131072,8192,nvidia/nvidia/nemotron-3.5-super-vl-120b-a12b
 oci/meta.llama-4-maverick-17b-128e-instruct-fp8,context,1048576,512000,oci/meta.llama-4-maverick-17b-128e-instruct-fp8
 oci/meta.llama-4-maverick-17b-128e-instruct-fp8,max_input,1048576,512000,oci/meta.llama-4-maverick-17b-128e-instruct-fp8
 oci/meta.llama-4-maverick-17b-128e-instruct-fp8,max_output,8192,16384,oci/meta.llama-4-maverick-17b-128e-instruct-fp8
