@@ -6221,7 +6221,8 @@
 "github_copilot/mai-code-2":["github_copilot",128000,128000,null],
 "github_copilot/mai-code-2-flash":["github_copilot",128000,128000,null],
 "github_copilot/gpt-6.2-astra":["github_copilot",922000,128000,null],
-"github_copilot/gpt-6.2-sol":["github_copilot",922000,128000,null]},
+"github_copilot/gpt-6.2-sol":["github_copilot",922000,128000,null],
+"together_ai/Qwen/Qwen4-Max":["together_ai",1000000,1000000,null]},
 "fills":{
 "ai21/jamba-large":["ai21",256000,4096,256000],
 "ai21/jamba-mini":["ai21",256000,4096,256000],
@@ -7416,7 +7417,7 @@
 "oci/xai.grok-4.6":["oci",500000,null,500000],
 "openai/gpt-5.3-codex-spark":["openai",100000,32000,128000],
 "ovhcloud/qwen3.5-397b-a17b":["ovhcloud",262144,null,262144],
-"ovhcloud/qwen3.5-9b":["ovhcloud",262144,null,262144],
+"ovhcloud/qwen3.5-9b":["ovhcloud",262144,65536,262144],
 "ovhcloud/qwen3.6-27b":["ovhcloud",262144,null,262144],
 "ovhcloud/qwen3.8-27b":["ovhcloud",262144,null,262144],
 "ovhcloud/qwen3guard-gen-0.6b":["ovhcloud",32768,16384,32768],
