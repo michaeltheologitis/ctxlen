@@ -179,11 +179,14 @@ mistral/codestral-2508,max_output,128000,8192,mistral/codestral-2508
 mistral/codestral-latest,context,128000,256000,mistral/codestral-latest
 mistral/codestral-latest,max_input,128000,256000,mistral/codestral-latest
 mistral/codestral-latest,max_output,128000,4096,mistral/codestral-latest
+mistral/ministral-3b-2512,context,262144,131072,mistral/ministral-3b-2512
+mistral/ministral-3b-2512,max_input,262144,131072,mistral/ministral-3b-2512
+mistral/ministral-3b-latest,context,262144,131072,mistral/ministral-3b-latest
+mistral/ministral-3b-latest,max_input,262144,131072,mistral/ministral-3b-latest
 mistral/ministral-8b-latest,max_output,262144,128000,mistral/ministral-8b-latest
 mistral/mistral-embed,context,8192,8000,mistral/mistral-embed
 mistral/mistral-large-4,max_output,1048576,262144,mistral/mistral-large-4
-mistral/mistral-large-latest,context,262144,1048576,mistral/mistral-large-latest
-mistral/mistral-large-latest,max_input,262144,1048576,mistral/mistral-large-latest
+mistral/mistral-large-latest,max_output,1048576,262144,mistral/mistral-large-latest
 morph/morph-v3-fast,context,16000,262144,morph/morph-v3-fast
 morph/morph-v3-fast,max_input,16000,262144,morph/morph-v3-fast
 morph/morph-v3-fast,max_output,16000,131072,morph/morph-v3-fast
@@ -225,6 +228,7 @@ oci/xai.grok-4.20-non-reasoning,max_output,1000000,30000,oci/xai.grok-4.20-non-r
 oci/xai.grok-4.20-reasoning,max_output,1000000,30000,oci/xai.grok-4.20-reasoning
 openai.gpt-oss-120b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-120b-1:0
 openai.gpt-oss-20b-1:0,max_output,16384,128000,amazon-bedrock/openai.gpt-oss-20b-1:0
+ovhcloud/gpt-oss-20b,max_output,131000,65536,ovhcloud/gpt-oss-20b
 qwen.qwen3-235b-a22b-2507-v1:0,max_output,8192,131072,amazon-bedrock/qwen.qwen3-235b-a22b-2507-v1:0
 qwen.qwen3-32b-v1:0,max_output,8192,16384,amazon-bedrock/qwen.qwen3-32b-v1:0
 qwen.qwen3-coder-next,max_output,16000,65536,amazon-bedrock/qwen.qwen3-coder-next
