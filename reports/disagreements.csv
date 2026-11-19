@@ -198,6 +198,8 @@ nebius/NousResearch/Hermes-4-405B,max_input,131072,120000,nebius/NousResearch/He
 nebius/NousResearch/Hermes-4-405B,max_output,131072,8192,nebius/NousResearch/Hermes-4-405B
 nebius/Qwen/Qwen3-235B-A22B-Instruct-2507,max_output,262144,8192,nebius/Qwen/Qwen3-235B-A22B-Instruct-2507
 nebius/Qwen/Qwen3-30B-A3B-Instruct-2507,max_output,262144,8192,nebius/Qwen/Qwen3-30B-A3B-Instruct-2507
+nebius/Qwen/Qwen3.8-27B,context,1000000,262144,nebius/Qwen/Qwen3.8-27B
+nebius/Qwen/Qwen3.8-27B,max_input,1000000,262144,nebius/Qwen/Qwen3.8-27B
 nebius/deepseek-ai/DeepSeek-V4-Pro-0813,context,1048576,979000,nebius/deepseek-ai/DeepSeek-V4-Pro-0813
 nebius/deepseek-ai/DeepSeek-V4-Pro-0813,max_input,1048576,979000,nebius/deepseek-ai/DeepSeek-V4-Pro-0813
 nebius/google/gemma-3-27b-it,max_input,110000,100000,nebius/google/gemma-3-27b-it
