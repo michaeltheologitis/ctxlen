@@ -1,14 +1,14 @@
 {
- "built_at": "2026-11-19T06:47:24Z",
+ "built_at": "2026-11-19T12:45:10Z",
  "litellm": {
-  "commit": "66fd00e7b03a6af09031e12dfd88db61d3c0481d",
-  "json_sha256": "6b0dfa21f85fe2ea1d4a7931ab16b0cf56d993455b6d13799f8b1228d7a8253f",
+  "commit": "95806573ea0f2e0bef3ef3b4549dcb61e9249076",
+  "json_sha256": "35324269521018afbbb23413133d2196b04bdd84a5a6fbf1d1964c8fb42e851d",
   "release": "1.109.1"
  },
  "models_dev": {
-  "api_sha256": "e8b14e9fca144945d3c814a2f1a5ed836b66443032c5a2effc76c004caa22dfd",
-  "fetched_at": "2026-11-19T06:47:22Z",
-  "dev_head": "0367026b2dc235da0c2bd4bdc2c8a29eb047b997"
+  "api_sha256": "eb90d6a80d8314e9be093bd5af9a13fd9cb926d959ffa9c9b5ac6963bf80ae74",
+  "fetched_at": "2026-11-19T12:45:08Z",
+  "dev_head": "ba846a56a8a2c486b92c82732a849fa474dc885b"
  },
  "rows": {
   "litellm": 7028,
@@ -35,15 +35,15 @@
  },
  "gate": {
   "previous": {
-   "rows": 7016,
+   "rows": 7028,
    "fills": 1318,
    "providers": 194
   },
   "shrink_limit": 0.25
  },
- "version": "2026.11.19.2",
+ "version": "2026.11.19.3",
  "e4": {
-  "wheel_bytes": 78515,
+  "wheel_bytes": 78509,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 6.283951999996873,
-    "first_lookup_ms": 52.718513000002076,
-    "slowest_later_ms": 0.12679800000370278,
+    "import_ms": 6.166919999998299,
+    "first_lookup_ms": 53.10469500000181,
+    "slowest_later_ms": 0.1025729999994951,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 181.11740700000212,
+    "default_lookup_ms": 184.36034099999787,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 13.040920000001677,
-    "first_lookup_ms": 73.86615299999733,
-    "slowest_later_ms": 0.14031500000299957,
+    "import_ms": 12.570486000001324,
+    "first_lookup_ms": 70.9168269999978,
+    "slowest_later_ms": 0.12478300000040576,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 322.02047100000186,
+    "default_lookup_ms": 308.1996690000004,
     "default_gpt_4o": 128000,
     "network_refused": true
    }

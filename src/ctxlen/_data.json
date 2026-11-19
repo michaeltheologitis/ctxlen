@@ -7269,7 +7269,7 @@
 "cortecs/gemma-4-26b-a4b-it":["cortecs",262000,81920,262000],
 "cortecs/gemma-4-31b-it":["cortecs",262000,null,262000],
 "cortecs/glm-4.7-flash":["cortecs",203000,null,203000],
-"cortecs/glm-5.2":["cortecs",1048576,1000000,1048576],
+"cortecs/glm-5.2":["cortecs",1048576,131072,1048576],
 "cortecs/glm-5.3":["cortecs",1048576,131072,1048576],
 "cortecs/glm-5.3-flash":["cortecs",1048576,131072,1048576],
 "cortecs/gpt-4.1":["cortecs",1047576,32768,1047576],
