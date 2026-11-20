@@ -134,7 +134,6 @@ fireworks_ai/accounts/fireworks/routers/glm-flash-latest,max_output,1048576,1310
 fireworks_ai/accounts/fireworks/routers/glm-latest,context,1048576,1048573,fireworks-ai/accounts/fireworks/routers/glm-latest
 fireworks_ai/accounts/fireworks/routers/glm-latest,max_output,128000,262144,fireworks-ai/accounts/fireworks/routers/glm-latest
 friendliai/google/gemma-4-31B-it,max_output,262144,32768,friendli/google/gemma-4-31B-it
-friendliai/zai-org/GLM-5.1,max_output,202752,131072,friendli/zai-org/GLM-5.1
 friendliai/zai-org/GLM-5.2,max_output,1048576,131072,friendli/zai-org/GLM-5.2
 friendliai/zai-org/GLM-5.3,max_output,1048576,131072,friendli/zai-org/GLM-5.3
 friendliai/zai-org/GLM-5.3-Flash,max_output,1048576,131072,friendli/zai-org/GLM-5.3-Flash
