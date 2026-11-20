@@ -7038,7 +7038,8 @@
 "gpt-live-1.1":["openai",null,null,null],
 "fal_ai/ideogram/v4.6":["fal_ai",null,null,null],
 "fal_ai/ideogram/v4.6/edit":["fal_ai",null,null,null],
-"together_ai/tencent/Hy4":["together_ai",1048576,1048576,null]},
+"together_ai/tencent/Hy4":["together_ai",1048576,1048576,null],
+"databricks/databricks-gemini-nano-banana-2-1":["databricks",131072,32768,null]},
 "fills":{
 "ai21/jamba-large":["ai21",256000,4096,256000],
 "ai21/jamba-mini":["ai21",256000,4096,256000],
@@ -7803,6 +7804,7 @@
 "nano-gpt/google/gemma-4-26b-a4b-it:thinking":["nano-gpt",262144,131072,262144],
 "nano-gpt/google/gemma-4-31b-it":["nano-gpt",262144,131072,262144],
 "nano-gpt/google/gemma-4-31b-it:thinking":["nano-gpt",262144,131072,262144],
+"nano-gpt/google/gemma4-31b-splituntied":["nano-gpt",32768,null,32768],
 "nano-gpt/heabsy/cyberheabsy":["nano-gpt",1048576,65536,1048576],
 "nano-gpt/heabsy/qwen3.8-27b-uncensored-fast":["nano-gpt",1048576,235929,1048576],
 "nano-gpt/hermes-high":["nano-gpt",1048576,131072,1048576],
