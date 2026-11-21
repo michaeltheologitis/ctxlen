@@ -1,21 +1,21 @@
 {
- "built_at": "2026-11-20T18:45:13Z",
+ "built_at": "2026-11-21T00:51:11Z",
  "litellm": {
-  "commit": "b487bfc55b9830187d140f71e36fecd1afa4ac29",
-  "json_sha256": "1de263d8752d726ef04768b18fec39c8bebe6eab589f8df4150ed4d5f5bcefdb",
+  "commit": "4c19f72a815e12fe226e858ffc21357bbd3528f8",
+  "json_sha256": "c436a6e5121c438a20b0c014d46129acfe41d2d1b23725bfda733dd901141210",
   "release": "1.109.1"
  },
  "models_dev": {
-  "api_sha256": "2e27cd6ba2500aff8229e7ac17094faab080a9dd1a0227f4a0669bad16694b81",
-  "fetched_at": "2026-11-20T18:45:09Z",
-  "dev_head": "5d7ea9892d028bea44e5d1af485d8ea071c952ce"
+  "api_sha256": "929420115fc1b2ca5d661b6dfd587b7e8f40cfde776230b55001fff786cf78f3",
+  "fetched_at": "2026-11-21T00:51:07Z",
+  "dev_head": "c10880942ab8473ac0a6355b99b7c126f6932ccb"
  },
  "rows": {
-  "litellm": 7073,
-  "with_input": 4937,
+  "litellm": 7076,
+  "with_input": 4939,
   "with_output": 4541,
   "with_context": 903,
-  "fills": 1338,
+  "fills": 1337,
   "providers": 194
  },
  "field_fills": {
@@ -26,24 +26,24 @@
  "skipped_models_dev": 0,
  "disagreements": 316,
  "coverage": {
-  "catalog": 2656,
+  "catalog": 2655,
   "litellm_alone": 996,
-  "ctxlen": 2355,
-  "total_from_models_dev": 2191,
+  "ctxlen": 2354,
+  "total_from_models_dev": 2190,
   "total_from_litellm": 164,
   "total_none": 301
  },
  "gate": {
   "previous": {
-   "rows": 7037,
+   "rows": 7073,
    "fills": 1338,
    "providers": 194
   },
   "shrink_limit": 0.25
  },
- "version": "2026.11.20.4",
+ "version": "2026.11.21.1",
  "e4": {
-  "wheel_bytes": 79059,
+  "wheel_bytes": 79115,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 6.2281579999989845,
-    "first_lookup_ms": 55.69143600000359,
-    "slowest_later_ms": 0.1030220000046711,
+    "import_ms": 6.548263999999193,
+    "first_lookup_ms": 53.748614999999944,
+    "slowest_later_ms": 0.1022110000015175,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 187.85786300000495,
+    "default_lookup_ms": 179.2574839999972,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 13.134147999998902,
-    "first_lookup_ms": 73.21992499999652,
-    "slowest_later_ms": 0.15262399999471654,
+    "import_ms": 12.810866000002363,
+    "first_lookup_ms": 72.75569999999476,
+    "slowest_later_ms": 0.13726599999586142,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 321.9566289999989,
+    "default_lookup_ms": 319.6778549999948,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
