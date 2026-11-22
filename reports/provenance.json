@@ -1,14 +1,14 @@
 {
- "built_at": "2026-11-22T06:45:23Z",
+ "built_at": "2026-11-22T12:45:27Z",
  "litellm": {
-  "commit": "48ebe308bcca39ccdd45fb37488a60ba668106c9",
-  "json_sha256": "8335a7bdfaeece5e4347caa54e9ccd64ff9a4544bbdb6d4c41369b7d51c421e0",
+  "commit": "90dce4b93bd2b090621a6b9083311294d3358bc6",
+  "json_sha256": "6d01a4f5d5135c3a0830dbd543c4b25e4aa438891360c3ecae7608db7d257b97",
   "release": "1.110.1"
  },
  "models_dev": {
-  "api_sha256": "37960b584f3076053ae8f7315277e99ac23733234a6974c235cad1bff53beeff",
-  "fetched_at": "2026-11-22T06:45:21Z",
-  "dev_head": "482544f6541fd88f0506b713fb85712ea6b8e99a"
+  "api_sha256": "1cea0ee6646786d665708c6805ea49a52bd0a41789aa797be1b876c6eddc22d3",
+  "fetched_at": "2026-11-22T12:45:25Z",
+  "dev_head": "c35ac2c58f1124ddffc2790100c9fc37636c149c"
  },
  "rows": {
   "litellm": 7098,
@@ -36,14 +36,14 @@
  "gate": {
   "previous": {
    "rows": 7098,
-   "fills": 1337,
+   "fills": 1338,
    "providers": 196
   },
   "shrink_limit": 0.25
  },
- "version": "2026.11.22.2",
+ "version": "2026.11.22.3",
  "e4": {
-  "wheel_bytes": 79353,
+  "wheel_bytes": 79358,
   "requires_dist": [
    "Requires-Dist: httpx>=0.28,<1",
    "Requires-Dist: certifi"
@@ -52,22 +52,22 @@
   "sdist_missing": [],
   "probes": {
    "3.13": {
-    "import_ms": 4.271053000024949,
-    "first_lookup_ms": 34.49789800004055,
-    "slowest_later_ms": 0.06050199999663164,
+    "import_ms": 6.333634000000643,
+    "first_lookup_ms": 55.92834300000149,
+    "slowest_later_ms": 0.10780699999912713,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 120.11431200005518,
+    "default_lookup_ms": 190.8126050000014,
     "default_gpt_4o": 128000,
     "network_refused": true
    },
    "3.9": {
-    "import_ms": 8.047686999930193,
-    "first_lookup_ms": 45.137106000083804,
-    "slowest_later_ms": 0.07618500001171924,
+    "import_ms": 12.712282000002517,
+    "first_lookup_ms": 72.4909260000004,
+    "slowest_later_ms": 0.13066300000019737,
     "gpt_4o": 128000,
     "httpx_loaded": false,
-    "default_lookup_ms": 190.842840000073,
+    "default_lookup_ms": 316.7779419999981,
     "default_gpt_4o": 128000,
     "network_refused": true
    }
