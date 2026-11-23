@@ -236,6 +236,11 @@ qwen.qwen3-32b-v1:0,max_output,8192,16384,amazon-bedrock/qwen.qwen3-32b-v1:0
 qwen.qwen3-coder-next,max_output,16000,65536,amazon-bedrock/qwen.qwen3-coder-next
 qwen.qwen3-next-80b-a3b,max_output,8000,262000,amazon-bedrock/qwen.qwen3-next-80b-a3b
 qwen.qwen3-vl-235b-a22b,max_output,8000,262000,amazon-bedrock/qwen.qwen3-vl-235b-a22b
+sarvam/deepseekv4.1-flash-1017,max_output,1048576,384000,sarvam/deepseekv4.1-flash-1017
+sarvam/deepseekv4.1-flash-1017-interactive,max_output,1048576,384000,sarvam/deepseekv4.1-flash-1017-interactive
+sarvam/gemma4,max_output,262144,32768,sarvam/gemma4
+sarvam/glm5.3,max_output,1048576,131072,sarvam/glm5.3
+sarvam/glm5.3-flash,max_output,1048576,131072,sarvam/glm5.3-flash
 scx-ai/GLM-5.2,context,1048576,1000000,scx-ai/GLM-5.2
 snowflake/claude-haiku-4-5,max_output,16384,64000,snowflake-cortex/claude-haiku-4-5
 snowflake/claude-sonnet-4-5,max_output,16384,64000,snowflake-cortex/claude-sonnet-4-5
