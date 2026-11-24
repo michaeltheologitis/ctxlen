@@ -162,7 +162,6 @@ gpt-5.4,max_input,1050000,922000,openai/gpt-5.4
 gpt-5.4-pro,max_input,1050000,922000,openai/gpt-5.4-pro
 gpt-5.5,max_input,1050000,922000,openai/gpt-5.5
 gpt-5.5-pro,max_input,1050000,922000,openai/gpt-5.5-pro
-gpt-realtime-2.1,max_input,128000,96000,openai/gpt-realtime-2.1
 jp.anthropic.claude-sonnet-4-6,max_output,64000,128000,amazon-bedrock/jp.anthropic.claude-sonnet-4-6
 minimax.minimax-m2.5,max_output,8000,98304,amazon-bedrock/minimax.minimax-m2.5
 minimax/MiniMax-M3,max_output,128000,524288,minimax/MiniMax-M3
