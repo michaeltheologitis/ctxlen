@@ -70,6 +70,7 @@ databricks/databricks-llama-4-maverick,max_output,128000,8192,databricks/databri
 databricks/databricks-meta-llama-3-1-8b-instruct,max_output,128000,8192,databricks/databricks-meta-llama-3-1-8b-instruct
 databricks/databricks-meta-llama-3-3-70b-instruct,max_output,128000,8192,databricks/databricks-meta-llama-3-3-70b-instruct
 databricks/system.ai.gemini-4-carbon,max_output,1048576,65536,databricks/system.ai.gemini-4-carbon
+deepinfra/ByteDance/Seed-1.8,max_output,256000,64000,deepinfra/ByteDance/Seed-1.8
 deepinfra/ByteDance/Seed-2.0-code,max_output,256000,131072,deepinfra/ByteDance/Seed-2.0-code
 deepinfra/ByteDance/Seed-2.0-mini,max_output,256000,32000,deepinfra/ByteDance/Seed-2.0-mini
 deepinfra/ByteDance/Seed-2.0-pro,max_output,256000,128000,deepinfra/ByteDance/Seed-2.0-pro
@@ -104,12 +105,14 @@ deepinfra/google/gemma-4-26B-A4B-it,max_output,262144,32768,deepinfra/google/gem
 deepinfra/google/gemma-4-31B-it,max_output,262144,32768,deepinfra/google/gemma-4-31B-it
 deepinfra/google/gemma-4-31B-it-Ultra,max_output,131072,8192,deepinfra/google/gemma-4-31B-it-Ultra
 deepinfra/google/gemma-4-31B-it-turbo,max_output,262144,16384,deepinfra/google/gemma-4-31B-it-turbo
+deepinfra/inclusionAI/Ling-3.0-flash,max_output,131072,32768,deepinfra/inclusionAI/Ling-3.0-flash
 deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo,max_output,131072,16384,deepinfra/meta-llama/Llama-3.3-70B-Instruct-Turbo
 deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct,max_output,327680,16384,deepinfra/meta-llama/Llama-4-Scout-17B-16E-Instruct
 deepinfra/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo,max_output,131072,4096,deepinfra/meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo
 deepinfra/mistralai/Mistral-Small-24B-Instruct-2501,max_output,32768,16384,deepinfra/mistralai/Mistral-Small-24B-Instruct-2501
 deepinfra/mistralai/Mistral-Small-3.2-24B-Instruct-2506,max_output,128000,16384,deepinfra/mistralai/Mistral-Small-3.2-24B-Instruct-2506
 deepinfra/moonshotai/Kimi-K2.6,max_output,262144,16384,deepinfra/moonshotai/Kimi-K2.6
+deepinfra/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B,max_output,262144,128000,deepinfra/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B
 deepinfra/openai/gpt-oss-20b,max_output,131072,16384,deepinfra/openai/gpt-oss-20b
 deepinfra/zai-org/GLM-4.6,max_output,202752,131072,deepinfra/zai-org/GLM-4.6
 deepinfra/zai-org/GLM-4.7,max_output,202752,16384,deepinfra/zai-org/GLM-4.7
