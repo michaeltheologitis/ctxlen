@@ -263,6 +263,7 @@ snowflake/openai-gpt-5-nano,context,5000000,272000,snowflake-cortex/openai-gpt-5
 snowflake/openai-gpt-5-nano,max_input,5000000,272000,snowflake-cortex/openai-gpt-5-nano
 snowflake/openai-gpt-5-nano,max_output,16384,8192,snowflake-cortex/openai-gpt-5-nano
 together_ai/MiniMaxAI/MiniMax-M3.1-Flash,max_output,1048576,512000,togetherai/MiniMaxAI/MiniMax-M3.1-Flash
+together_ai/Prism-ML/Ternary-Bonsai-27B,max_output,262144,65536,togetherai/Prism-ML/Ternary-Bonsai-27B
 together_ai/Qwen/Qwen3.5-9B,max_output,262144,65536,togetherai/Qwen/Qwen3.5-9B
 together_ai/Qwen/Qwen3.6-Plus,max_output,1000000,65536,togetherai/Qwen/Qwen3.6-Plus
 together_ai/Qwen/Qwen3.7-Max,max_output,1000000,131072,togetherai/Qwen/Qwen3.7-Max
