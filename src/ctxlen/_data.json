@@ -7179,7 +7179,8 @@
 "fireworks_ai/accounts/fireworks/models/inkling-2-small":["fireworks_ai",1048576,null,null],
 "fireworks_ai/accounts/fireworks/routers/glm-5p3-flex":["fireworks_ai",1048576,128000,null],
 "fireworks_ai/accounts/fireworks/routers/glm-5p3-flash-flex":["fireworks_ai",1048576,1048576,null],
-"fireworks_ai/accounts/fireworks/models/glm-5p3-spot":["fireworks_ai",1048576,128000,null]},
+"fireworks_ai/accounts/fireworks/models/glm-5p3-spot":["fireworks_ai",1048576,128000,null],
+"fireworks_ai/accounts/fireworks/routers/kimi-k3p1-pro-ultrafast":["fireworks_ai",1048576,131072,null]},
 "fills":{
 "ai21/jamba-large":["ai21",256000,4096,256000],
 "ai21/jamba-mini":["ai21",256000,4096,256000],

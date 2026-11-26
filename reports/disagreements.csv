@@ -123,6 +123,10 @@ fireworks_ai/accounts/fireworks/routers/deepseek-v4p1-flash-1017-ultrafast,conte
 fireworks_ai/accounts/fireworks/routers/deepseek-v4p1-flash-spot,context,1048576,1000000,fireworks-ai/accounts/fireworks/routers/deepseek-v4p1-flash-spot
 fireworks_ai/accounts/fireworks/routers/glm-5p3-fast,context,1048576,1048572,fireworks-ai/accounts/fireworks/routers/glm-5p3-fast
 fireworks_ai/accounts/fireworks/routers/glm-5p3-fast,max_output,1048576,262144,fireworks-ai/accounts/fireworks/routers/glm-5p3-fast
+fireworks_ai/accounts/fireworks/routers/glm-5p3-flash-flex,context,1048576,1048573,fireworks-ai/accounts/fireworks/routers/glm-5p3-flash-flex
+fireworks_ai/accounts/fireworks/routers/glm-5p3-flash-flex,max_output,1048576,131072,fireworks-ai/accounts/fireworks/routers/glm-5p3-flash-flex
+fireworks_ai/accounts/fireworks/routers/glm-5p3-flex,context,1048576,1048573,fireworks-ai/accounts/fireworks/routers/glm-5p3-flex
+fireworks_ai/accounts/fireworks/routers/glm-5p3-flex,max_output,128000,262144,fireworks-ai/accounts/fireworks/routers/glm-5p3-flex
 fireworks_ai/accounts/fireworks/routers/glm-5p3-spot,context,1048576,1048573,fireworks-ai/accounts/fireworks/routers/glm-5p3-spot
 fireworks_ai/accounts/fireworks/routers/glm-5p3-spot,max_output,128000,262144,fireworks-ai/accounts/fireworks/routers/glm-5p3-spot
 fireworks_ai/accounts/fireworks/routers/glm-5p3-us,context,1048576,1048573,fireworks-ai/accounts/fireworks/routers/glm-5p3-us
