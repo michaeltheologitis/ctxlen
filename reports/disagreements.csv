@@ -261,7 +261,6 @@ together_ai/Qwen/Qwen3.7-Max,max_output,1000000,131072,togetherai/Qwen/Qwen3.7-M
 together_ai/Qwen/Qwen3.7-Plus,max_output,1000000,131072,togetherai/Qwen/Qwen3.7-Plus
 together_ai/Qwen/Qwen3.8-Flash,max_output,1000000,131072,togetherai/Qwen/Qwen3.8-Flash
 together_ai/Qwen/Qwen4-Max,max_output,1000000,262144,togetherai/Qwen/Qwen4-Max
-together_ai/deepseek-ai/DeepSeek-V4-Pro-0813,max_output,1048576,384000,togetherai/deepseek-ai/DeepSeek-V4-Pro-0813
 together_ai/deepseek-ai/DeepSeek-V4.1-Flash,max_output,1048576,384000,togetherai/deepseek-ai/DeepSeek-V4.1-Flash
 together_ai/deepseek-ai/DeepSeek-V4.1-Flash-1017,max_output,1048576,384000,togetherai/deepseek-ai/DeepSeek-V4.1-Flash-1017
 together_ai/deepseek-ai/DeepSeek-V4.1-Flash-1017-fast,max_output,1048576,384000,togetherai/deepseek-ai/DeepSeek-V4.1-Flash-1017-fast
