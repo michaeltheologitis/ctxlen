@@ -7859,7 +7859,6 @@
 "nano-gpt/bytedance-seed/seed-2.0-code":["nano-gpt",262144,131072,262144],
 "nano-gpt/bytedance-seed/seed-2.0-lite":["nano-gpt",262144,131072,262144],
 "nano-gpt/bytedance/doubao-seed-character":["nano-gpt",128000,32768,128000],
-"nano-gpt/celeris-1":["nano-gpt",8192,null,8192],
 "nano-gpt/claw-high":["nano-gpt",1048576,131072,1048576],
 "nano-gpt/claw-low":["nano-gpt",1048576,131072,1048576],
 "nano-gpt/claw-medium":["nano-gpt",1048576,131072,1048576],
