@@ -7766,7 +7766,6 @@
 "nano-gpt/Gryphe/MythoMax-L2-13b":["nano-gpt",4096,3686,4096],
 "nano-gpt/LatitudeGames/Wayfarer-Large-70B-Llama-3.3":["nano-gpt",32768,16384,32768],
 "nano-gpt/Meta-Llama-3-1-8B-Instruct-FP8":["nano-gpt",128000,16384,128000],
-"nano-gpt/Qwen3.5-27B-Blossom-V6.4-Derestricted":["nano-gpt",262144,null,262144],
 "nano-gpt/Qwen3.5-27B-BlueStar-v3-Derestricted":["nano-gpt",262144,16384,262144],
 "nano-gpt/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-Derestricted":["nano-gpt",262144,null,262144],
 "nano-gpt/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-Derestricted-Lite":["nano-gpt",262144,null,262144],
